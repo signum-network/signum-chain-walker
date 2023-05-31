@@ -3,4 +3,4 @@
 /dist/index.js.map
 .env.local
 .env
-cache.json
+*.cache.json

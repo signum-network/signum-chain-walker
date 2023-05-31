@@ -16,6 +16,8 @@ describe("chainWalker", () => {
         fail("Should throw an exception");
       } catch (e) {
         expect(e.message).toMatch("No handler set");
+      } finally {
+        await walker.stop();
       }
     });
     it("must trigger pendingTransactionsHandler", async () => {
@@ -33,6 +35,7 @@ describe("chainWalker", () => {
       await new Promise((resolve) => {
         setTimeout(resolve, 1100);
       });
+      await walker.stop();
       expect(handler).toBeCalledTimes(2);
     });
     it("must trigger transactionsHandler", async () => {
@@ -50,6 +53,7 @@ describe("chainWalker", () => {
       await new Promise((resolve) => {
         setTimeout(resolve, 1100);
       });
+      await walker.stop();
       expect(handler).toBeCalledTimes(12);
     });
     it("must trigger all handlers", async () => {
@@ -72,6 +76,7 @@ describe("chainWalker", () => {
       await new Promise((resolve) => {
         setTimeout(resolve, 1100);
       });
+      await walker.stop();
       expect(pendingHandler).toBeCalledTimes(2);
       expect(blockHandler).toBeCalledTimes(2);
       expect(txHandler).toBeCalledTimes(12);
