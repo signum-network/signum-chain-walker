@@ -1,4 +1,5 @@
 import { readJSON, writeJSON, pathExists } from "fs-extra";
+
 interface CacheData {
   lastUpdated: string;
   lastSuccessfullyProcessedBlock: number;
@@ -8,9 +9,19 @@ interface CacheData {
 }
 
 export class Cache {
-  private data: CacheData;
+  private data: CacheData = {
+    lastUpdated: new Date(0).toISOString(),
+    lastSuccessfullyProcessedBlock: 0,
+    lastProcessingError: "",
+    unprocessedTxIds: {},
+    avgProcessingTime: 0,
+  };
 
-  constructor(private filename: string, private inMemoryOnly = false) {}
+  constructor(private filename: string = "") {}
+
+  get isMemoryOnly() {
+    return !this.filename;
+  }
 
   getLastProcessedBlock() {
     return this.data.lastSuccessfullyProcessedBlock;
@@ -21,18 +32,11 @@ export class Cache {
   }
 
   getUnprocessedTransactionSet() {
-    return new Set<string>(Object.keys(this.data.unprocessedTxIds));
+    return new Set<string>(Object.keys(this.data.unprocessedTxIds || {}));
   }
 
   async read(): Promise<Cache> {
-    if (this.inMemoryOnly && !this.data) {
-      this.data = {
-        lastUpdated: new Date(0).toISOString(),
-        lastSuccessfullyProcessedBlock: 0,
-        lastProcessingError: "",
-        unprocessedTxIds: {},
-        avgProcessingTime: 0,
-      };
+    if (this.isMemoryOnly) {
       return this;
     }
 
@@ -66,8 +70,9 @@ export class Cache {
 
   async persist() {
     this.updateDate();
-    if (!this.inMemoryOnly) {
-      await writeJSON(this.filename, this.data);
+    if (this.isMemoryOnly) {
+      return;
     }
+    await writeJSON(this.filename, this.data);
   }
 }

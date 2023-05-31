@@ -45,17 +45,12 @@ interface ChainWalkerConfig {
    * The Mock Ledger is for testing purposes.
    */
   mockLedger?: MockLedger;
-  /**
-   * Determines that the cache should not persist at all. Used for testing only
-   */
-  inMemCache?: boolean;
 }
 
 const DefaultConfig: ChainWalkerConfig = {
   cachePath: join(cwd(), "./chainwalker.cache.json"),
   nodeHost: "http://localhost:8125",
   intervalSeconds: 5,
-  inMemCache: false,
 };
 
 /**
@@ -135,7 +130,7 @@ export class ChainWalker {
       return;
     }
     this.scheduler = new ToadScheduler();
-    this.cache = new Cache(this.config.cachePath, this.config.inMemCache);
+    this.cache = new Cache(this.config.cachePath);
     this.scheduler.addSimpleIntervalJob(
       new SimpleIntervalJob(
         {
@@ -193,6 +188,7 @@ export class ChainWalker {
         this.logger.trace("Block not found - Waiting");
         return;
       }
+      // @ts-ignore
       let transactions = block.transactions as Transaction[];
       const previouslyUnprocessedTransactions =
         this.cache.getUnprocessedTransactionSet();
