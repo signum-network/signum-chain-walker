@@ -1,11 +1,13 @@
 import { ChainWalker } from "../chainWalker";
-import { TestLedger } from "./mock/testLedger";
+import { TestLedger } from "./mocks/testLedger";
+
+const IsVerbose = false;
 
 describe("chainWalker", () => {
   describe("listen", () => {
     it("must throw error if no handler is set", async () => {
       const walker = new ChainWalker({
-        verbose: true,
+        verbose: IsVerbose,
         intervalSeconds: 1,
         initialStartBlock: 0,
         mockLedger: TestLedger,
@@ -41,7 +43,7 @@ describe("chainWalker", () => {
     it("must trigger transactionsHandler", async () => {
       const handler = jest.fn();
       const walker = new ChainWalker({
-        verbose: true,
+        verbose: IsVerbose,
         intervalSeconds: 1,
         initialStartBlock: 0,
         mockLedger: TestLedger,
@@ -61,7 +63,7 @@ describe("chainWalker", () => {
       const blockHandler = jest.fn();
       const txHandler = jest.fn();
       const walker = new ChainWalker({
-        verbose: false,
+        verbose: IsVerbose,
         intervalSeconds: 1,
         initialStartBlock: 0,
         mockLedger: TestLedger,
