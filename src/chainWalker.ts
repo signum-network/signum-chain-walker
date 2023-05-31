@@ -16,6 +16,7 @@ import { MockLedger } from "./mockLedger";
 type BlockHandler = (block: Block) => Promise<void>;
 type TransactionHandler = (tx: Transaction) => Promise<void>;
 type PendingTransactionsHandler = (tx: Transaction[]) => Promise<void>;
+
 interface ChainWalkerConfig {
   /**
    * The Signum Node Url
@@ -119,15 +120,14 @@ export class ChainWalker {
       return;
     }
 
-    if (
-      !this.pendingTransactionHandler ||
-      !this.blockHandler ||
-      !this.transactionHandler
-    ) {
-      this.logger.error(
+    const hasListener =
+      Boolean(this.pendingTransactionHandler) ||
+      Boolean(this.blockHandler) ||
+      Boolean(this.transactionHandler);
+    if (!hasListener) {
+      throw new Error(
         "No handler set...makes no sense to start without any handler 😜"
       );
-      return;
     }
     this.scheduler = new ToadScheduler();
     this.cache = new Cache(this.config.cachePath);
@@ -139,7 +139,7 @@ export class ChainWalker {
         },
         new AsyncTask("walkerTask", () => this.process()),
         {
-          id: "job-42",
+          id: "job-01",
           preventOverrun: true,
         }
       )
@@ -206,8 +206,7 @@ export class ChainWalker {
         });
         // process in guaranteed time order
         transactions.sort((a, b) => b.timestamp - a.timestamp);
-        const tx = transactions.pop();
-        while (tx) {
+        for (let tx of transactions) {
           this.logger.trace(
             `Calling handler for transaction: ${tx.transaction}`
           );
@@ -227,7 +226,7 @@ export class ChainWalker {
       this.logger.error("Processing Error", e);
       processingError = e.message;
     } finally {
-      this.logger.trace(`Finalizing task - Updating persistent cache`);
+      this.logger.trace(`Finalizing task - Updating cache`);
       this.cache.update({
         lastSuccessfullyProcessedBlock: processedBlock,
         unprocessedTxIds,
