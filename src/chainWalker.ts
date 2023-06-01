@@ -137,8 +137,8 @@ export class ChainWalker {
       this.logger.trace(
         `Trying to reach node under ${this.config.nodeHost} ...`
       );
-      // @ts-ignore
       const { height } = await this.ledger.block.getBlockByHeight(
+        // @ts-ignore
         undefined,
         false
       );
