@@ -17,8 +17,19 @@ export class Cache {
     avgProcessingTime: 0,
   };
 
-  constructor(private filename: string = "") {}
+  constructor(private filename: string = "") {
+    this.initialize();
+  }
 
+  private initialize() {
+    this.data = {
+      lastUpdated: new Date(0).toISOString(),
+      lastSuccessfullyProcessedBlock: 0,
+      lastProcessingError: "",
+      unprocessedTxIds: {},
+      avgProcessingTime: 0,
+    };
+  }
   get isMemoryOnly() {
     return !this.filename;
   }
@@ -42,14 +53,7 @@ export class Cache {
 
     const exists = await pathExists(this.filename);
     if (!exists) {
-      this.data = {
-        lastUpdated: new Date(0).toISOString(),
-        lastSuccessfullyProcessedBlock: 0,
-        lastProcessingError: "",
-        unprocessedTxIds: {},
-        avgProcessingTime: 0,
-      };
-      await this.persist();
+      await this.reset(true);
     } else {
       this.data = await readJSON(this.filename);
     }
@@ -74,5 +78,12 @@ export class Cache {
       return;
     }
     await writeJSON(this.filename, this.data);
+  }
+
+  async reset(shouldPersist: boolean) {
+    this.initialize();
+    if (shouldPersist) {
+      await this.persist();
+    }
   }
 }

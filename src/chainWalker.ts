@@ -12,6 +12,7 @@ import { Cache } from "./cache";
 import { createLogger } from "./logger";
 import { BaseLogger } from "pino";
 import { MockLedger } from "./mockLedger";
+import { pCall } from "./pCall";
 
 type BlockHandler = (block: Block) => Promise<void>;
 type TransactionHandler = (tx: Transaction) => Promise<void>;
@@ -38,6 +39,7 @@ interface ChainWalkerConfig {
 
   /**
    * If set the walker will start at that block number, otherwise starts at last stored block, or current block at time of starting
+   * Previously cached data will be overwritten then.
    */
   initialStartBlock?: number;
 
@@ -131,6 +133,13 @@ export class ChainWalker {
     }
     this.scheduler = new ToadScheduler();
     this.cache = new Cache(this.config.cachePath);
+    if (this.config.initialStartBlock) {
+      await this.cache.reset(false);
+      this.cache.update({
+        lastSuccessfullyProcessedBlock: this.config.initialStartBlock - 1,
+      });
+      await this.cache.persist();
+    }
     this.scheduler.addSimpleIntervalJob(
       new SimpleIntervalJob(
         {
@@ -178,12 +187,13 @@ export class ChainWalker {
         const { unconfirmedTransactions } =
           await this.ledger.transaction.getUnconfirmedTransactions();
         if (unconfirmedTransactions.length) {
-          await this.pendingTransactionHandler(unconfirmedTransactions);
+          await pCall(this.pendingTransactionHandler, unconfirmedTransactions);
         }
       }
 
-      this.logger.trace(`Fetching block: ${lastProcessedBlock}`);
-      const block = await this.fetchBlock(lastProcessedBlock + 1);
+      const nextBlock = lastProcessedBlock + 1;
+      this.logger.trace(`Fetching block: ${nextBlock}`);
+      const block = await this.fetchBlock(nextBlock);
       if (!block) {
         this.logger.trace("Block not found - Waiting");
         return;
@@ -210,16 +220,16 @@ export class ChainWalker {
           this.logger.trace(
             `Calling handler for transaction: ${tx.transaction}`
           );
-          await this.transactionHandler(tx);
+          await pCall(this.transactionHandler, tx);
           delete unprocessedTxIds[tx.transaction];
           this.logger.trace(`Processed transaction: ${tx.transaction}`);
         }
       }
 
       if (this.blockHandler) {
-        this.logger.trace(`Calling handler for transaction: ${block}`);
-        await this.blockHandler(block);
-        this.logger.trace(`Processed block: ${block}`);
+        this.logger.trace(`Calling handler for block: ${block.height}`);
+        await pCall(this.blockHandler, block);
+        this.logger.trace(`Processed block: ${block.height}`);
       }
       processedBlock = block.height;
     } catch (e) {

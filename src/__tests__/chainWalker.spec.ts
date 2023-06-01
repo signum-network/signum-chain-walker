@@ -1,7 +1,8 @@
 import { ChainWalker } from "../chainWalker";
 import { TestLedger } from "./mocks/testLedger";
+import { Block } from "@signumjs/core";
 
-const IsVerbose = false;
+const IsVerbose = true;
 
 describe("chainWalker", () => {
   describe("listen", () => {
@@ -39,6 +40,27 @@ describe("chainWalker", () => {
       });
       await walker.stop();
       expect(handler).toBeCalledTimes(2);
+    });
+
+    it("must trigger blockHandler", async () => {
+      let block: Block = null;
+      const handler = jest.fn().mockImplementation((b) => (block = b));
+      const walker = new ChainWalker({
+        verbose: IsVerbose,
+        intervalSeconds: 1,
+        initialStartBlock: 552091,
+        mockLedger: TestLedger,
+        nodeHost: "",
+      }).onBlock(handler);
+
+      await walker.listen();
+
+      await new Promise((resolve) => {
+        setTimeout(resolve, 1100);
+      });
+      await walker.stop();
+      expect(handler).toBeCalledTimes(2);
+      expect(block.height).toBe(552092);
     });
     it("must trigger transactionsHandler", async () => {
       const handler = jest.fn();
