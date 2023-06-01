@@ -10,8 +10,8 @@
     "build:examples": "npm run build && rimraf ./examples/*.js && tsc -p tsconfig.examples.json",
     "prepare": "husky install && npm run build",
     "example:listen": "npm run build:examples && node examples/listen.js",
-    "example:catch-up": "npm run build:examples && node examples/catchUpBlockchain.js",
-    "example:catch-up-listen": "npm run build:examples && node examples/catchUpAndListen.js"
+    "example:walk": "npm run build:examples && node examples/walk.js",
+    "example:walk-listen": "npm run build:examples && node examples/walkAndListen.js"
   },
   "repository": {
     "type": "git",

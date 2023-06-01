@@ -20,7 +20,7 @@ const walker = new ChainWalker({
   });
 
 (async () => {
-  await walker.catchUpBlockchain(StartBlock);
+  await walker.walk(StartBlock);
   console.log(
     `Counted ${countedTransactions} transactions since Block ${StartBlock} (in ${countedBlocks} blocks)`
   );

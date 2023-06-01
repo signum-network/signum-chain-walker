@@ -40,7 +40,7 @@ const walker = new ChainWalker({
   });
 
 (async () => {
-  await walker.catchUpBlockchain(StartBlock);
+  await walker.walk(StartBlock);
   printStats();
   mode = "listen";
   await walker.listen();
