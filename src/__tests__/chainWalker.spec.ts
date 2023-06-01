@@ -1,15 +1,15 @@
 import { ChainWalker } from "../chainWalker";
 import { TestLedger } from "./mocks/testLedger";
-import { Block } from "@signumjs/core";
+import { Block, Transaction } from "@signumjs/core";
 
-const IsVerbose = true;
+const IsVerbose = false;
 
 describe("chainWalker", () => {
   describe("listen", () => {
     it("must throw error if no handler is set", async () => {
       const walker = new ChainWalker({
         verbose: IsVerbose,
-        intervalSeconds: 1,
+        intervalSeconds: 0.1,
         initialStartBlock: 0,
         mockLedger: TestLedger,
         nodeHost: "",
@@ -27,7 +27,7 @@ describe("chainWalker", () => {
       const handler = jest.fn();
       const walker = new ChainWalker({
         verbose: false,
-        intervalSeconds: 1,
+        intervalSeconds: 0.1,
         initialStartBlock: 0,
         mockLedger: TestLedger,
         nodeHost: "",
@@ -36,7 +36,7 @@ describe("chainWalker", () => {
       await walker.listen();
 
       await new Promise((resolve) => {
-        setTimeout(resolve, 1100);
+        setTimeout(resolve, 110);
       });
       await walker.stop();
       expect(handler).toBeCalledTimes(2);
@@ -47,7 +47,7 @@ describe("chainWalker", () => {
       const handler = jest.fn().mockImplementation((b) => (block = b));
       const walker = new ChainWalker({
         verbose: IsVerbose,
-        intervalSeconds: 1,
+        intervalSeconds: 0.1,
         initialStartBlock: 552091,
         mockLedger: TestLedger,
         nodeHost: "",
@@ -56,18 +56,23 @@ describe("chainWalker", () => {
       await walker.listen();
 
       await new Promise((resolve) => {
-        setTimeout(resolve, 1100);
+        setTimeout(resolve, 110);
       });
       await walker.stop();
       expect(handler).toBeCalledTimes(2);
       expect(block.height).toBe(552092);
     });
     it("must trigger transactionsHandler", async () => {
-      const handler = jest.fn();
+      let lastProcessedTx: Transaction;
+      const processedTx = new Set<string>();
+      const handler = jest.fn().mockImplementation((t) => {
+        lastProcessedTx = t;
+        processedTx.add(t.transaction);
+      });
       const walker = new ChainWalker({
         verbose: IsVerbose,
-        intervalSeconds: 1,
-        initialStartBlock: 0,
+        intervalSeconds: 0.1,
+        initialStartBlock: 552092,
         mockLedger: TestLedger,
         nodeHost: "",
       }).onTransaction(handler);
@@ -75,10 +80,17 @@ describe("chainWalker", () => {
       await walker.listen();
 
       await new Promise((resolve) => {
-        setTimeout(resolve, 1100);
+        setTimeout(resolve, 110);
       });
       await walker.stop();
-      expect(handler).toBeCalledTimes(12);
+      expect(handler).toBeCalledTimes(5);
+      expect(lastProcessedTx.height).toBe(552093);
+      expect(lastProcessedTx.transaction).toBe("1649891197739725755");
+      expect(processedTx.has("12138612333627809376")).toBeTruthy();
+      expect(processedTx.has("558973604337360685")).toBeTruthy();
+      expect(processedTx.has("263011623990690313")).toBeTruthy();
+      expect(processedTx.has("1649891197739725755")).toBeTruthy();
+      expect(processedTx.has("15735764943213866385")).toBeTruthy();
     });
     it("must trigger all handlers", async () => {
       const pendingHandler = jest.fn();
@@ -86,8 +98,8 @@ describe("chainWalker", () => {
       const txHandler = jest.fn();
       const walker = new ChainWalker({
         verbose: IsVerbose,
-        intervalSeconds: 1,
-        initialStartBlock: 0,
+        intervalSeconds: 0.1,
+        initialStartBlock: 552091,
         mockLedger: TestLedger,
         nodeHost: "",
       })
@@ -98,12 +110,12 @@ describe("chainWalker", () => {
       await walker.listen();
 
       await new Promise((resolve) => {
-        setTimeout(resolve, 1100);
+        setTimeout(resolve, 110);
       });
       await walker.stop();
       expect(pendingHandler).toBeCalledTimes(2);
       expect(blockHandler).toBeCalledTimes(2);
-      expect(txHandler).toBeCalledTimes(12);
+      expect(txHandler).toBeCalledTimes(2);
     });
   });
 });

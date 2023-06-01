@@ -209,7 +209,7 @@ export class ChainWalker {
       }
 
       if (this.transactionHandler) {
-        this.logger.trace(`Processing ${transactions.length} transactions`);
+        this.logger.trace(`Processing ${transactions.length} transaction(s)`);
         // remember potentially unprocessed tx
         transactions.forEach((tx) => {
           unprocessedTxIds[tx.transaction] = 1;
