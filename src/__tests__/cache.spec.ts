@@ -8,7 +8,7 @@ describe("cache", () => {
         const cache = new Cache();
         expect(cache.getLastProcessedBlock()).toBe(0);
         cache.update({
-          lastSuccessfullyProcessedBlock: 1,
+          lastProcessedBlock: 1,
         });
         cache.read();
         expect(cache.getLastProcessedBlock()).toBe(1);
@@ -19,7 +19,7 @@ describe("cache", () => {
         const cache = new Cache();
         expect(cache.getLastProcessedBlock()).toBe(0);
         cache.update({
-          lastSuccessfullyProcessedBlock: 1,
+          lastProcessedBlock: 1,
           lastProcessingError: "Test Error",
           unprocessedTxIds: { "1": 1 },
         });

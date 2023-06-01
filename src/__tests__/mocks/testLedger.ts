@@ -12,9 +12,11 @@ const BlockMap = {
   552091: 5,
 };
 
+const CurrentBlock = 552094;
+
 export const TestLedger: MockLedger = {
   block: {
-    getBlockByHeight: (height = 552094) => {
+    getBlockByHeight: (height = CurrentBlock) => {
       // @ts-ignore
       const block = MockedBlocks[BlockMap[height]];
       // @ts-ignore

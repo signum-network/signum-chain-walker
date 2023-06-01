@@ -9,7 +9,9 @@
     "build": "rimraf ./dist && tsc",
     "build:examples": "npm run build && rimraf ./examples/*.js && tsc -p tsconfig.examples.json",
     "prepare": "husky install && npm run build",
-    "example:simple": "npm run build:examples && node ./examples/simple.js"
+    "example:listen": "npm run build:examples && node examples/listen.js",
+    "example:catch-up": "npm run build:examples && node examples/catchUpBlockchain.js",
+    "example:catch-up-listen": "npm run build:examples && node examples/catchUpAndListen.js"
   },
   "repository": {
     "type": "git",
@@ -38,7 +40,6 @@
   "dependencies": {
     "@signumjs/core": "^1.0.0-rc.70",
     "@signumjs/util": "^1.0.0-rc.70",
-    "dotenv": "^16.0.3",
     "fs-extra": "^11.1.0",
     "p-retry": "^4.6.2",
     "pino": "^8.14.1",

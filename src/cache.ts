@@ -2,7 +2,7 @@ import { readJSON, writeJSON, pathExists } from "fs-extra";
 
 interface CacheData {
   lastUpdated: string;
-  lastSuccessfullyProcessedBlock: number;
+  lastProcessedBlock: number;
   lastProcessingError: string;
   unprocessedTxIds: object;
   avgProcessingTime: number;
@@ -11,7 +11,7 @@ interface CacheData {
 export class Cache {
   private data: CacheData = {
     lastUpdated: new Date(0).toISOString(),
-    lastSuccessfullyProcessedBlock: 0,
+    lastProcessedBlock: 0,
     lastProcessingError: "",
     unprocessedTxIds: {},
     avgProcessingTime: 0,
@@ -24,7 +24,7 @@ export class Cache {
   private initialize() {
     this.data = {
       lastUpdated: new Date(0).toISOString(),
-      lastSuccessfullyProcessedBlock: 0,
+      lastProcessedBlock: 0,
       lastProcessingError: "",
       unprocessedTxIds: {},
       avgProcessingTime: 0,
@@ -35,7 +35,7 @@ export class Cache {
   }
 
   getLastProcessedBlock() {
-    return this.data.lastSuccessfullyProcessedBlock;
+    return this.data.lastProcessedBlock;
   }
 
   getLastProcessingError() {
@@ -77,7 +77,7 @@ export class Cache {
     if (this.isMemoryOnly) {
       return;
     }
-    await writeJSON(this.filename, this.data);
+    await writeJSON(this.filename, this.data, { spaces: "\t" });
   }
 
   async reset(shouldPersist: boolean) {

@@ -19,10 +19,10 @@ import pRetry from "p-retry";
 readline.emitKeypressEvents(process.stdin);
 if (process.stdin.isTTY) process.stdin.setRawMode(true);
 
-type BlockHandler = (block: Block) => Promise<void>;
-type TransactionHandler = (tx: Transaction) => Promise<void>;
-type PendingTransactionsHandler = (tx: Transaction[]) => Promise<void>;
-type BeforeQuitHandler = () => Promise<void>;
+type BlockHandler = (block: Block) => Promise<void> | void;
+type TransactionHandler = (tx: Transaction) => Promise<void> | void;
+type PendingTransactionsHandler = (tx: Transaction[]) => Promise<void> | void;
+type BeforeQuitHandler = () => Promise<void> | void;
 
 interface ChainWalkerConfig {
   /**
@@ -63,8 +63,7 @@ const DefaultConfig: ChainWalkerConfig = {
 export class ChainWalker {
   private config = DefaultConfig;
   private ledger: Ledger | MockLedger;
-  // @ts-ignore
-  private scheduler: ToadScheduler;
+  private scheduler: ToadScheduler | null = null;
   // @ts-ignore
   private cache: Cache;
   // @ts-ignore
@@ -102,6 +101,8 @@ export class ChainWalker {
 
   /**
    * Sets the transactions handler.
+   * This handler calls once for each transaction in a block.
+   * Note: that on block handler the transactions are contained also.
    * @param handler
    */
   onTransaction(handler: TransactionHandler): ChainWalker {
@@ -111,6 +112,10 @@ export class ChainWalker {
 
   /**
    * Sets the transaction handler for pending transactions.
+   *
+   * Pending transactions handler gives you all pending transactions on all periodical calls.
+   * You need to track on your behalf if these transactions were processed by you or not.
+   *
    * @param handler
    */
   onPendingTransactions(handler: PendingTransactionsHandler): ChainWalker {
@@ -118,73 +123,74 @@ export class ChainWalker {
     return this;
   }
 
+  /**
+   * Called before the exiting (after the job stopped). Use this to do cleanups on your side
+   * @param handler
+   */
   onBeforeQuit(handler: BeforeQuitHandler) {
     this.beforeQuitHandler = handler;
     return this;
-  }
-
-  private listenForQuit() {
-    if (process.env.NODE_ENV === "test") return;
-
-    process.stdin.once("keypress", async (chunk, key) => {
-      if (key && key.name === "q") await this.stop();
-      process.exit();
-    });
-  }
-
-  private async fetchCurrentBlockHeight() {
-    try {
-      this.logger.trace(
-        `Trying to reach node under ${this.config.nodeHost} ...`
-      );
-      const { height } = await this.ledger.block.getBlockByHeight(
-        // @ts-ignore
-        undefined,
-        false
-      );
-      return height;
-    } catch (e: any) {
-      this.logger.error(`Node ${this.config.nodeHost} not reachable`);
-      process.exit(1);
-    }
   }
 
   /**
    * Iterates over the blocks beginning with _startHeight_ until the current block.
    * This method processes each block as quick as possible (depending on the handlers), without
    * any further delays. You must call this before `listen` -
-   * Note that this operation can take several minutes
-   * @param startHeight The block height where to start. If undefined or negative the last cached height is used.
+   *
+   * __Usage__
+   *
+   * This method is useful, if you want to reconstruct for example a database based on the blockchain data.
+   * Due to its immutability and integrity the blockchain is your "Single Source of Truth" and though your secure backup.
+   *
+   * Note that this operation can take several minutes. It can be speed up significantly, if running against a local node.
+   * @param startHeight The block height where to start. If there's a cached height > startHeight, the cached height is taken instead.
+   * This way it is possible, to continue on already processed data and somehow halted process, without beginning from the startHeight.
+   * If you really want to start from scratch you need to delete the cache file.
    */
-  public async catchUpBlockchain(startHeight?: number) {
+  async catchUpBlockchain(startHeight?: number) {
     this.assertHandler();
     this.listenForQuit();
+    await this.cache.read();
+    const start = Math.max(
+      startHeight || 0,
+      this.cache.getLastProcessedBlock()
+    );
     this.logger.info(
       `Signum Chain Walker catching up node ${
         this.config.nodeHost || "Mock Ledger"
-      }...\nPress <q> to quit`
+      } starting at block ${startHeight}...\nPress <q> to quit`
     );
-    let start = startHeight;
-    if (start === undefined || start < 0) {
-      await this.cache.read();
-      start = this.cache.getLastProcessedBlock();
-    }
+    this.cache.update({ lastProcessedBlock: start });
+    await this.cache.persist();
     const height = await this.fetchCurrentBlockHeight();
     let processedBlock = start;
     while (processedBlock < height) {
-      const { processedBlock: block } = await pRetry(async () =>
-        this.process()
+      processedBlock = await pRetry(
+        async () => {
+          const { processingError, processedBlock } = await this.process();
+          if (processingError) {
+            throw new Error(processingError);
+          }
+          return processedBlock;
+        },
+        {
+          onFailedAttempt: (error) => {
+            this.logger.warn(
+              `Attempt ${error.attemptNumber} failed. There are ${error.retriesLeft} retries left.`
+            );
+          },
+          retries: 3,
+        }
       );
-      processedBlock = block;
       if (processedBlock % 1000 === 0) {
         this.logger.info(`Processed block ${processedBlock}`);
       }
     }
-    return this;
   }
 
   /**
-   * Listens for blocks starting at nodes last mined block, consider running catchUpBlockchain before
+   * Listens for blocks starting at last mined block.
+   * Consider running catchUpBlockchain before, if you need to process the history also.
    */
   async listen() {
     this.assertHandler();
@@ -196,7 +202,7 @@ export class ChainWalker {
     const currentBlockHeight = await this.fetchCurrentBlockHeight();
     await this.cache.read();
     this.cache.update({
-      lastSuccessfullyProcessedBlock: currentBlockHeight,
+      lastProcessedBlock: currentBlockHeight,
     });
     await this.cache.persist();
 
@@ -231,10 +237,11 @@ export class ChainWalker {
 
   async stop() {
     process.stdin.removeAllListeners("keypress");
-    this.logger.trace("Shutting down...");
+    this.logger.info("Shutting down...");
     await pCall(this.beforeQuitHandler);
     if (this.scheduler) {
       this.scheduler.stop();
+      this.scheduler = null;
     }
   }
 
@@ -249,6 +256,7 @@ export class ChainWalker {
       );
     }
   }
+
   private async fetchBlock(height: number): Promise<Block | null> {
     try {
       return await this.ledger.block.getBlockByHeight(height, true);
@@ -328,7 +336,7 @@ export class ChainWalker {
     } finally {
       this.logger.trace(`Finalizing task - Updating cache`);
       this.cache.update({
-        lastSuccessfullyProcessedBlock: processedBlock,
+        lastProcessedBlock: processedBlock,
         unprocessedTxIds,
         lastProcessingError: processingError,
       });
@@ -354,5 +362,31 @@ export class ChainWalker {
       processedBlock,
       processingError,
     };
+  }
+
+  private listenForQuit() {
+    if (process.env.NODE_ENV === "test") return;
+
+    process.stdin.once("keypress", async (chunk, key) => {
+      if (key && key.name === "q") await this.stop();
+      process.exit();
+    });
+  }
+
+  private async fetchCurrentBlockHeight() {
+    try {
+      this.logger.trace(
+        `Trying to reach node under ${this.config.nodeHost} ...`
+      );
+      const { height } = await this.ledger.block.getBlockByHeight(
+        // @ts-ignore
+        undefined,
+        false
+      );
+      return height;
+    } catch (e: any) {
+      this.logger.error(`Node ${this.config.nodeHost} not reachable`);
+      process.exit(1);
+    }
   }
 }

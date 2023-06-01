@@ -1,16 +1,23 @@
 import { ChainWalker } from "../chainWalker";
 import { TestLedger } from "./mocks/testLedger";
+import { Block, Transaction } from "@signumjs/core";
 
 const IsVerbose = false;
+
+function sleep(durationMillies: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, durationMillies);
+  });
+}
 
 describe("chainWalker", () => {
   describe("catchUpBlockchain", () => {
     it("must throw error if no handler is set", async () => {
       const walker = new ChainWalker({
         verbose: IsVerbose,
-        intervalSeconds: 0.1,
         mockLedger: TestLedger,
         nodeHost: "",
+        cachePath: "",
       });
       try {
         await walker.catchUpBlockchain();
@@ -21,6 +28,146 @@ describe("chainWalker", () => {
         await walker.stop();
       }
     });
+    it("should sync with blockchain - using a startHeight", async () => {
+      let block: any = null;
+      const handler = jest.fn().mockImplementation((b) => (block = b));
+
+      const walker = new ChainWalker({
+        verbose: IsVerbose,
+        mockLedger: TestLedger,
+        nodeHost: "",
+        cachePath: "",
+      });
+      await walker.onBlock(handler).catchUpBlockchain(552092);
+      await walker.stop();
+      expect(handler).toBeCalledTimes(2);
+      expect(block?.height).toBe(552094); // mock Ledger
+    });
+    it("should sync with blockchain - using a startHeight and using all callbacks", async () => {
+      let block: any = null;
+      const pendingHandler = jest.fn();
+      const blockHandler = jest.fn();
+      const txHandler = jest.fn();
+      const quitHandler = jest.fn();
+      const walker = new ChainWalker({
+        verbose: IsVerbose,
+        mockLedger: TestLedger,
+        nodeHost: "",
+        cachePath: "",
+      });
+      await walker
+        .onBlock(blockHandler)
+        .onPendingTransactions(pendingHandler)
+        .onTransaction(txHandler)
+        .onBeforeQuit(quitHandler)
+        .catchUpBlockchain(552092);
+      await walker.stop();
+      expect(pendingHandler).toBeCalledTimes(2);
+      expect(blockHandler).toBeCalledTimes(2);
+      expect(txHandler).toBeCalledTimes(4);
+      expect(quitHandler).toBeCalledTimes(1);
+    });
+    it("should sync with blockchain - no startHeight given", async () => {
+      let block: any = null;
+      const handler = jest.fn().mockImplementation((b) => (block = b));
+
+      const walker = new ChainWalker({
+        verbose: IsVerbose,
+        mockLedger: TestLedger,
+        nodeHost: "",
+        cachePath: "",
+      });
+      await walker.onBlock(handler).catchUpBlockchain(552091);
+      await walker.stop();
+      expect(handler).toBeCalledTimes(3);
+      expect(block?.height).toBe(552094); // mock Ledger
+    });
+    it("should sync with blockchain - recover from error", async () => {
+      let block: any = null;
+      let errorCount = 0;
+      const handler = jest.fn().mockImplementation((b: Block) => {
+        if (b.height === 552093 && errorCount < 2) {
+          ++errorCount;
+          throw new Error("Test Error");
+        }
+        block = b;
+      });
+
+      const walker = new ChainWalker({
+        verbose: IsVerbose,
+        mockLedger: TestLedger,
+        nodeHost: "",
+        cachePath: "",
+      });
+      await walker.onBlock(handler).catchUpBlockchain(552091);
+      await walker.stop();
+      expect(handler).toBeCalledTimes(5);
+      expect(block?.height).toBe(552094); // mock Ledger
+    });
+    it("should sync with blockchain - restarts where previous run stopped - block level (takes up to 10 secs)", async () => {
+      let block: any = null;
+      const handlerBad = jest.fn().mockImplementation((b: Block) => {
+        throw new Error("Unrecoverable");
+      });
+      const handlerGood = jest
+        .fn()
+        .mockImplementation((b: Block) => (block = b));
+
+      const walker = new ChainWalker({
+        verbose: IsVerbose,
+        mockLedger: TestLedger,
+        nodeHost: "",
+        cachePath: "",
+      });
+      try {
+        await walker.onBlock(handlerBad).catchUpBlockchain(552091);
+        await walker.stop();
+      } catch (e: any) {
+        // ignore
+      }
+      await walker.onBlock(handlerGood).catchUpBlockchain(); // start where halted before
+      await walker.stop();
+      expect(block?.height).toBe(552094);
+    }, 10_000);
+    it("should sync with blockchain - restarts where previous run stopped - on transaction level (takes up to 10 secs)", async () => {
+      let txCount = 0;
+      let lastTx = "";
+      let lastBlock = 0;
+      const blockHandler = (b: Block) => {
+        lastBlock = b.height;
+      };
+      const txHandlerBad = jest.fn().mockImplementation((tx: Transaction) => {
+        lastTx = tx.transaction;
+        if (tx.transaction === "263011623990690313") {
+          // in block 552093
+          throw new Error("Test Error");
+        }
+        ++txCount;
+      });
+
+      const txHandlerGood = jest.fn().mockImplementation((tx: Transaction) => {
+        lastTx = tx.transaction;
+        ++txCount;
+      });
+      const walker = new ChainWalker({
+        verbose: IsVerbose,
+        mockLedger: TestLedger,
+        nodeHost: "",
+        cachePath: "",
+      })
+        .onBlock(blockHandler)
+        .onTransaction(txHandlerBad);
+      try {
+        await walker.catchUpBlockchain(552091);
+      } catch (e: any) {
+        // ignore
+      }
+      expect(lastBlock).toBe(552092);
+      await walker.onTransaction(txHandlerGood).catchUpBlockchain(); // start where halted before
+      expect(txCount).toBe(5);
+      expect(lastTx).toBe("1649891197739725755");
+      expect(lastBlock).toBe(552094);
+    }, 10_000);
   });
   describe("listen", () => {
     it("must throw error if no handler is set", async () => {
@@ -29,6 +176,7 @@ describe("chainWalker", () => {
         intervalSeconds: 0.1,
         mockLedger: TestLedger,
         nodeHost: "",
+        cachePath: "",
       });
       try {
         await walker.listen();
@@ -50,14 +198,10 @@ describe("chainWalker", () => {
       }).onPendingTransactions(handler);
 
       await walker.listen();
-
-      await new Promise((resolve) => {
-        setTimeout(resolve, 110);
-      });
+      await sleep(110);
       await walker.stop();
       expect(handler).toBeCalledTimes(2);
     });
-
     it("must trigger blockHandler", async () => {
       let block: any = null;
       const handler = jest.fn().mockImplementation((b) => (block = b));
@@ -70,10 +214,7 @@ describe("chainWalker", () => {
       }).onBlock(handler);
 
       await walker.listen();
-
-      await new Promise((resolve) => {
-        setTimeout(resolve, 110);
-      });
+      await sleep(110);
       await walker.stop();
       expect(handler).toBeCalledTimes(2);
       expect(block?.height).toBe(552096);
@@ -94,10 +235,7 @@ describe("chainWalker", () => {
       }).onTransaction(handler);
 
       await walker.listen();
-
-      await new Promise((resolve) => {
-        setTimeout(resolve, 110);
-      });
+      await sleep(110);
       await walker.stop();
       expect(handler).toBeCalledTimes(6);
       expect(lastProcessedTx?.height).toBe(552096);
@@ -127,10 +265,7 @@ describe("chainWalker", () => {
         .onBeforeQuit(quitHandler);
 
       await walker.listen();
-
-      await new Promise((resolve) => {
-        setTimeout(resolve, 110);
-      });
+      await sleep(110);
       await walker.stop();
       expect(pendingHandler).toBeCalledTimes(2);
       expect(blockHandler).toBeCalledTimes(2);
