@@ -1,5 +1,6 @@
 import { cwd } from "process";
 import { join } from "path";
+import * as readline from "readline";
 import {
   Block,
   Ledger,
@@ -17,6 +18,10 @@ import { pCall } from "./pCall";
 type BlockHandler = (block: Block) => Promise<void>;
 type TransactionHandler = (tx: Transaction) => Promise<void>;
 type PendingTransactionsHandler = (tx: Transaction[]) => Promise<void>;
+
+readline.emitKeypressEvents(process.stdin);
+
+if (process.stdin.isTTY) process.stdin.setRawMode(true);
 
 interface ChainWalkerConfig {
   /**
@@ -61,12 +66,17 @@ const DefaultConfig: ChainWalkerConfig = {
  * It allows to listen for blocks and transactions.
  */
 export class ChainWalker {
-  private config: ChainWalkerConfig;
+  private config = DefaultConfig;
   private ledger: Ledger | MockLedger;
+  // @ts-ignore
   private scheduler: ToadScheduler;
+  // @ts-ignore
   private cache: Cache;
+  // @ts-ignore
   private blockHandler: BlockHandler;
+  // @ts-ignore
   private transactionHandler: TransactionHandler;
+  // @ts-ignore
   private pendingTransactionHandler: PendingTransactionsHandler;
   private logger: BaseLogger;
 
@@ -80,13 +90,8 @@ export class ChainWalker {
       ...DefaultConfig,
       ...config,
     };
-    this.logger = createLogger(config.verbose);
+    this.logger = createLogger(Boolean(config.verbose));
   }
-
-  // use(middleware: Middleware): ChainWalker {
-  //     // to do middleware
-  //     return this;
-  // }
 
   /**
    * Sets the block handler.
@@ -116,6 +121,27 @@ export class ChainWalker {
     return this;
   }
 
+  private listenForQuit() {
+    process.stdin.on("keypress", async (chunk, key) => {
+      if (key && key.name === "q") await this.stop();
+      process.exit();
+    });
+  }
+
+  private async assertNodeReachable() {
+    try {
+      this.logger.trace(
+        `Trying to reach node under ${this.config.nodeHost}...`
+      );
+      await this.ledger.block.getBlockByHeight(0, false);
+    } catch (e: any) {
+      throw new Error(`Node not ${this.config.nodeHost}...`);
+    }
+  }
+
+  /**
+   * Starts the chain walker
+   */
   async listen() {
     if (this.scheduler) {
       this.logger.warn("Already running");
@@ -140,13 +166,26 @@ export class ChainWalker {
       });
       await this.cache.persist();
     }
+
+    // await this.assertNodeReachable();
+
+    this.logger.info(
+      `Signum Chain Walker is listening to ${this.config.nodeHost}...\nPress <q> to quit`
+    );
+    this.listenForQuit();
     this.scheduler.addSimpleIntervalJob(
       new SimpleIntervalJob(
         {
           seconds: this.config.intervalSeconds,
           runImmediately: true,
         },
-        new AsyncTask("walkerTask", () => this.process()),
+        new AsyncTask(
+          "walkerTask",
+          () => this.process(),
+          (e) => {
+            this.logger.error(e.message);
+          }
+        ),
         {
           id: "job-01",
           preventOverrun: true,
@@ -175,7 +214,7 @@ export class ChainWalker {
 
   private async process() {
     this.logger.trace("Starting task");
-    let unprocessedTxIds = {};
+    let unprocessedTxIds: Record<string, number> = {};
     let processingError = "";
     let processedBlock = -1;
     const started = Date.now();
@@ -232,8 +271,8 @@ export class ChainWalker {
         this.logger.trace(`Processed block: ${block.height}`);
       }
       processedBlock = block.height;
-    } catch (e) {
-      this.logger.error("Processing Error", e);
+    } catch (e: any) {
+      this.logger.error(`Processing Error: ${e.message}`);
       processingError = e.message;
     } finally {
       this.logger.trace(`Finalizing task - Updating cache`);
@@ -245,6 +284,7 @@ export class ChainWalker {
       await this.cache.persist();
 
       const taskDuration = (Date.now() - started) / 1000;
+      // @ts-ignore
       if (taskDuration > this.config.intervalSeconds) {
         this.logger.warn(
           `Entire processing cycle took ${taskDuration.toFixed(

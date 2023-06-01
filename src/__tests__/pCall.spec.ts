@@ -30,7 +30,7 @@ describe("pCall", () => {
     try {
       await pCall(asyncFn, "a", 1);
       fail("Should throw exception");
-    } catch (e) {
+    } catch (e: any) {
       expect(e.message).toEqual("error");
     }
   });
@@ -43,7 +43,7 @@ describe("pCall", () => {
     try {
       await pCall(asyncFn, "a", 1);
       fail("Should throw exception");
-    } catch (e) {
+    } catch (e: any) {
       expect(e.message).toEqual("error");
     }
   });
@@ -54,7 +54,7 @@ describe("pCall", () => {
     try {
       await pCall(func, "a", 1);
       fail("Should throw exception");
-    } catch (e) {
+    } catch (e: any) {
       expect(e.message).toEqual("error");
     }
   });

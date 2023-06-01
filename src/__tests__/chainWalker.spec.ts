@@ -1,6 +1,5 @@
 import { ChainWalker } from "../chainWalker";
 import { TestLedger } from "./mocks/testLedger";
-import { Block, Transaction } from "@signumjs/core";
 
 const IsVerbose = false;
 
@@ -17,7 +16,7 @@ describe("chainWalker", () => {
       try {
         await walker.listen();
         fail("Should throw an exception");
-      } catch (e) {
+      } catch (e: any) {
         expect(e.message).toMatch("No handler set");
       } finally {
         await walker.stop();
@@ -26,11 +25,12 @@ describe("chainWalker", () => {
     it("must trigger pendingTransactionsHandler", async () => {
       const handler = jest.fn();
       const walker = new ChainWalker({
-        verbose: false,
+        verbose: IsVerbose,
         intervalSeconds: 0.1,
         initialStartBlock: 0,
         mockLedger: TestLedger,
         nodeHost: "",
+        cachePath: "", // in memory
       }).onPendingTransactions(handler);
 
       await walker.listen();
@@ -43,7 +43,7 @@ describe("chainWalker", () => {
     });
 
     it("must trigger blockHandler", async () => {
-      let block: Block = null;
+      let block: any = null;
       const handler = jest.fn().mockImplementation((b) => (block = b));
       const walker = new ChainWalker({
         verbose: IsVerbose,
@@ -51,6 +51,7 @@ describe("chainWalker", () => {
         initialStartBlock: 552091,
         mockLedger: TestLedger,
         nodeHost: "",
+        cachePath: "", // in memory
       }).onBlock(handler);
 
       await walker.listen();
@@ -60,10 +61,10 @@ describe("chainWalker", () => {
       });
       await walker.stop();
       expect(handler).toBeCalledTimes(2);
-      expect(block.height).toBe(552092);
+      expect(block?.height).toBe(552092);
     });
     it("must trigger transactionsHandler", async () => {
-      let lastProcessedTx: Transaction;
+      let lastProcessedTx: any = null;
       const processedTx = new Set<string>();
       const handler = jest.fn().mockImplementation((t) => {
         lastProcessedTx = t;
@@ -75,6 +76,7 @@ describe("chainWalker", () => {
         initialStartBlock: 552092,
         mockLedger: TestLedger,
         nodeHost: "",
+        cachePath: "", // in memory
       }).onTransaction(handler);
 
       await walker.listen();
@@ -84,8 +86,8 @@ describe("chainWalker", () => {
       });
       await walker.stop();
       expect(handler).toBeCalledTimes(5);
-      expect(lastProcessedTx.height).toBe(552093);
-      expect(lastProcessedTx.transaction).toBe("1649891197739725755");
+      expect(lastProcessedTx?.height).toBe(552093);
+      expect(lastProcessedTx?.transaction).toBe("1649891197739725755");
       expect(processedTx.has("12138612333627809376")).toBeTruthy();
       expect(processedTx.has("558973604337360685")).toBeTruthy();
       expect(processedTx.has("263011623990690313")).toBeTruthy();
@@ -102,6 +104,7 @@ describe("chainWalker", () => {
         initialStartBlock: 552091,
         mockLedger: TestLedger,
         nodeHost: "",
+        cachePath: "", // in memory
       })
         .onPendingTransactions(pendingHandler)
         .onBlock(blockHandler)

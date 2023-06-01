@@ -1,4 +1,4 @@
-export function pCall(fn, ...args) {
+export function pCall(fn: Function, ...args: any[]) {
   if (typeof fn !== "function") {
     throw new Error("Expected a function!");
   }

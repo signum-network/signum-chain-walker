@@ -1,6 +1,7 @@
 /.idea
 /node_modules
-/dist/index.js.map
+/dist
+/examples/*.js
 .env.local
 .env
 *.cache.json

@@ -15,6 +15,7 @@ const BlockMap = {
 export const TestLedger: MockLedger = {
   block: {
     getBlockByHeight: (height) => {
+      // @ts-ignore
       const block = MockedBlocks[BlockMap[height]];
       // @ts-ignore
       return Promise.resolve(block as Block);

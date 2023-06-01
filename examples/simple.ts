@@ -1,4 +1,5 @@
-import { ChainWalker } from "../src/chainWalker";
+// import process from "process"
+import { ChainWalker } from "../dist";
 
 const walker = new ChainWalker({
   nodeHost: "http://localhost:6876",
@@ -13,6 +14,15 @@ const walker = new ChainWalker({
     console.log("Transaction #", tx.transaction);
     return Promise.resolve();
   });
+
+async function shutDown() {
+  await walker.stop();
+  process.exit(0);
+}
+// graceful shutdown
+process.on("beforeExit", shutDown);
+process.on("SIGTERM", shutDown);
+process.on("SIGINT", shutDown);
 
 (async () => {
   await walker.listen();
