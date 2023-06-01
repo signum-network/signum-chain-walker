@@ -15,13 +15,12 @@ import { BaseLogger } from "pino";
 import { MockLedger } from "./mockLedger";
 import { pCall } from "./pCall";
 
+readline.emitKeypressEvents(process.stdin);
+if (process.stdin.isTTY) process.stdin.setRawMode(true);
+
 type BlockHandler = (block: Block) => Promise<void>;
 type TransactionHandler = (tx: Transaction) => Promise<void>;
 type PendingTransactionsHandler = (tx: Transaction[]) => Promise<void>;
-
-readline.emitKeypressEvents(process.stdin);
-
-if (process.stdin.isTTY) process.stdin.setRawMode(true);
 
 interface ChainWalkerConfig {
   /**
@@ -122,7 +121,9 @@ export class ChainWalker {
   }
 
   private listenForQuit() {
-    process.stdin.on("keypress", async (chunk, key) => {
+    if (process.env.NODE_ENV === "test") return;
+
+    process.stdin.once("keypress", async (chunk, key) => {
       if (key && key.name === "q") await this.stop();
       process.exit();
     });
@@ -195,6 +196,7 @@ export class ChainWalker {
   }
 
   async stop() {
+    process.stdin.removeAllListeners("keypress");
     this.logger.trace("Shutting down...");
     if (this.scheduler) {
       this.scheduler.stop();

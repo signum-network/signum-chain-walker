@@ -15,15 +15,6 @@ const walker = new ChainWalker({
     return Promise.resolve();
   });
 
-async function shutDown() {
-  await walker.stop();
-  process.exit(0);
-}
-// graceful shutdown
-process.on("beforeExit", shutDown);
-process.on("SIGTERM", shutDown);
-process.on("SIGINT", shutDown);
-
 (async () => {
   await walker.listen();
 })();
