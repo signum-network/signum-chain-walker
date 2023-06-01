@@ -32,14 +32,26 @@ interface ChainWalkerConfig {
   nodeHost: string;
   /**
    * Flag to enable/disable verbose console output.
+   * @default false
    */
   verbose?: boolean;
   /**
-   * Interval in seconds to poll the node, default is 5 seconds
+   * Interval in seconds to poll the node
+   * Only relevant for `listen`
+   * @default 5
    */
   intervalSeconds?: number;
+
   /**
-   * The file where the listeners status in JSON format can be stored. Default is ./cache.json
+   * Retries for processing errors, before surrender.
+   * Only relevant for `walk`
+   * @default 3
+   */
+  maxRetries?: number;
+
+  /**
+   * The file where the listeners status in JSON format can be stored.
+   * @default ./chainwalker.cache.json (current working directory)
    */
   cachePath?: string;
 
@@ -54,6 +66,7 @@ const DefaultConfig: ChainWalkerConfig = {
   cachePath: join(cwd(), "./chainwalker.cache.json"),
   nodeHost: "http://localhost:8125",
   intervalSeconds: 5,
+  maxRetries: 3,
 };
 
 /**
@@ -135,19 +148,22 @@ export class ChainWalker {
   /**
    * Iterates over the blocks beginning with _startHeight_ until the current block.
    * This method processes each block as quick as possible (depending on the handlers), without
-   * any further delays. You must call this before `listen` -
+   * any further delays. Usually, you want to use this before `listen`
    *
    * __Usage__
    *
    * This method is useful, if you want to reconstruct for example a database based on the blockchain data.
    * Due to its immutability and integrity the blockchain is your "Single Source of Truth" and though your secure backup.
    *
-   * Note that this operation can take several minutes. It can be speed up significantly, if running against a local node.
-   * @param startHeight The block height where to start. If there's a cached height > startHeight, the cached height is taken instead.
-   * This way it is possible, to continue on already processed data and somehow halted process, without beginning from the startHeight.
+   * Note, that this operation can take several minutes. It can be sped up significantly, if running against a local node.
+   *
+   * @param startHeight The block height where to start. If there's a cached height > `startHeight`, the cached height is taken instead.
+   * This way it is possible, to continue on already processed data and somehow halted process (due to processing errors), without beginning from the `startHeight`.
    * If you really want to start from scratch you need to delete the cache file.
+   *
+   * @note On processing errors this method tries to recover, i.e. retrying several times (p-retry) before it stops.
    */
-  async catchUpBlockchain(startHeight?: number) {
+  async walk(startHeight?: number) {
     this.assertHandler();
     this.listenForQuit();
     await this.cache.read();
@@ -179,7 +195,7 @@ export class ChainWalker {
               `Attempt ${error.attemptNumber} failed. There are ${error.retriesLeft} retries left.`
             );
           },
-          retries: 3,
+          retries: this.config.maxRetries,
         }
       );
       if (processedBlock % 1000 === 0) {

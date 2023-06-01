@@ -11,7 +11,7 @@ function sleep(durationMillies: number) {
 }
 
 describe("chainWalker", () => {
-  describe("catchUpBlockchain", () => {
+  describe("syncLedger", () => {
     it("must throw error if no handler is set", async () => {
       const walker = new ChainWalker({
         verbose: IsVerbose,
@@ -20,7 +20,7 @@ describe("chainWalker", () => {
         cachePath: "",
       });
       try {
-        await walker.catchUpBlockchain();
+        await walker.walk();
         fail("Should throw an exception");
       } catch (e: any) {
         expect(e.message).toMatch("No handler set");
@@ -38,7 +38,7 @@ describe("chainWalker", () => {
         nodeHost: "",
         cachePath: "",
       });
-      await walker.onBlock(handler).catchUpBlockchain(552092);
+      await walker.onBlock(handler).walk(552092);
       await walker.stop();
       expect(handler).toBeCalledTimes(2);
       expect(block?.height).toBe(552094); // mock Ledger
@@ -60,7 +60,7 @@ describe("chainWalker", () => {
         .onPendingTransactions(pendingHandler)
         .onTransaction(txHandler)
         .onBeforeQuit(quitHandler)
-        .catchUpBlockchain(552092);
+        .walk(552092);
       await walker.stop();
       expect(pendingHandler).toBeCalledTimes(2);
       expect(blockHandler).toBeCalledTimes(2);
@@ -77,7 +77,7 @@ describe("chainWalker", () => {
         nodeHost: "",
         cachePath: "",
       });
-      await walker.onBlock(handler).catchUpBlockchain(552091);
+      await walker.onBlock(handler).walk(552091);
       await walker.stop();
       expect(handler).toBeCalledTimes(3);
       expect(block?.height).toBe(552094); // mock Ledger
@@ -99,7 +99,7 @@ describe("chainWalker", () => {
         nodeHost: "",
         cachePath: "",
       });
-      await walker.onBlock(handler).catchUpBlockchain(552091);
+      await walker.onBlock(handler).walk(552091);
       await walker.stop();
       expect(handler).toBeCalledTimes(5);
       expect(block?.height).toBe(552094); // mock Ledger
@@ -120,12 +120,12 @@ describe("chainWalker", () => {
         cachePath: "",
       });
       try {
-        await walker.onBlock(handlerBad).catchUpBlockchain(552091);
+        await walker.onBlock(handlerBad).walk(552091);
         await walker.stop();
       } catch (e: any) {
         // ignore
       }
-      await walker.onBlock(handlerGood).catchUpBlockchain(); // start where halted before
+      await walker.onBlock(handlerGood).walk(); // start where halted before
       await walker.stop();
       expect(block?.height).toBe(552094);
     }, 10_000);
@@ -158,12 +158,12 @@ describe("chainWalker", () => {
         .onBlock(blockHandler)
         .onTransaction(txHandlerBad);
       try {
-        await walker.catchUpBlockchain(552091);
+        await walker.walk(552091);
       } catch (e: any) {
         // ignore
       }
       expect(lastBlock).toBe(552092);
-      await walker.onTransaction(txHandlerGood).catchUpBlockchain(); // start where halted before
+      await walker.onTransaction(txHandlerGood).walk(); // start where halted before
       expect(txCount).toBe(5);
       expect(lastTx).toBe("1649891197739725755");
       expect(lastBlock).toBe(552094);

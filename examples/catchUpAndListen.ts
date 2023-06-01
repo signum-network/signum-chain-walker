@@ -1,6 +1,10 @@
 import { ChainWalker } from "../dist";
 import { Amount } from "@signumjs/util";
 
+/**
+ * This example demonstrates how to use `catchUpBlock
+ */
+
 const StartBlock = 552_000;
 let countedBlocks = 0;
 let countedTransactions = 0;
@@ -36,9 +40,8 @@ const walker = new ChainWalker({
   });
 
 (async () => {
-  await walker.catchUpBlockchain(StartBlock).then(() => {
-    printStats();
-    mode = "listen";
-    return walker.listen();
-  });
+  await walker.catchUpBlockchain(StartBlock);
+  printStats();
+  mode = "listen";
+  await walker.listen();
 })();
