@@ -40,6 +40,7 @@
     "@signumjs/util": "^1.0.0-rc.70",
     "dotenv": "^16.0.3",
     "fs-extra": "^11.1.0",
+    "p-retry": "^4.6.2",
     "pino": "^8.14.1",
     "pino-pretty": "^10.0.0",
     "toad-scheduler": "^2.2.0"

@@ -46,9 +46,9 @@ export class Cache {
     return new Set<string>(Object.keys(this.data.unprocessedTxIds || {}));
   }
 
-  async read(): Promise<Cache> {
+  async read(): Promise<CacheData> {
     if (this.isMemoryOnly) {
-      return this;
+      return Promise.resolve(this.data);
     }
 
     const exists = await pathExists(this.filename);
@@ -57,7 +57,7 @@ export class Cache {
     } else {
       this.data = await readJSON(this.filename);
     }
-    return this;
+    return this.data;
   }
 
   update(data: Partial<Omit<CacheData, "lastUpdated" | "avgProcessingTime">>) {
