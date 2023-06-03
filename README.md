@@ -1,6 +1,8 @@
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=signum-network_signum-chain-walker&metric=coverage)](https://sonarcloud.io/summary/new_code?id=signum-network_signum-chain-walker)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=signum-network_signum-chain-walker&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=signum-network_signum-chain-walker)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=signum-network_signum-chain-walker&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=signum-network_signum-chain-walker)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=signum-network_signum-chain-walker&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=signum-network_signum-chain-walker)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=signum-network_signum-chain-walker&metric=bugs)](https://sonarcloud.io/summary/new_code?id=signum-network_signum-chain-walker)
 
 # signum-chain-walker
 
