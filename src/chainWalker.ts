@@ -24,6 +24,9 @@ type TransactionHandler = (tx: Transaction) => Promise<void> | void;
 type PendingTransactionsHandler = (tx: Transaction[]) => Promise<void> | void;
 type BeforeQuitHandler = () => Promise<void> | void;
 
+/**
+ * The walker configuration object
+ */
 interface ChainWalkerConfig {
   /**
    * The Signum Node Url
@@ -37,13 +40,14 @@ interface ChainWalkerConfig {
   verbose?: boolean;
   /**
    * Interval in seconds to poll the node
-   * Only relevant for `listen`
+   * @note Only relevant for [[ChainWalker.listen]]
    * @default 5
    */
   intervalSeconds?: number;
 
   /**
    * Retries for processing errors, before surrender.
+   * Only relevant for [[ChainWalker.listen]]
    * Only relevant for `walk`
    * @default 3
    */
@@ -70,8 +74,9 @@ const DefaultConfig: ChainWalkerConfig = {
 };
 
 /**
- * The ChainWalker instance checks a Signum Node periodically for new blocks and/or transactions.
- * It allows to listen for blocks and transactions.
+ * The ChainWalker allows to either walk from a give block height until the last mined block
+ * and/or to listen to the blockchain.
+ * In each mode same callbacks are called, such that blocks and transactions can processed according your needs.
  */
 export class ChainWalker {
   private config = DefaultConfig;
@@ -88,6 +93,10 @@ export class ChainWalker {
   private beforeQuitHandler: BeforeQuitHandler = () => Promise.resolve();
   private logger: BaseLogger;
 
+  /**
+   * Constructor
+   * @param {ChainWalkerConfig} config
+   */
   constructor(config: ChainWalkerConfig) {
     this.ledger = config.mockLedger
       ? config.mockLedger
@@ -206,7 +215,8 @@ export class ChainWalker {
 
   /**
    * Listens for blocks starting at last mined block.
-   * Consider running catchUpBlockchain before, if you need to process the history also.
+   * Consider running [[catchUpBlockchain]] before, if you need to process the history also.
+   * @note The config parameter `intervalSec
    */
   async listen(): Promise<void> {
     this.assertHandler();
@@ -253,6 +263,7 @@ export class ChainWalker {
 
   /**
    * Stops the listener
+   * @note Only relevant for [[listen]]
    */
   async stop() {
     process.stdin.removeAllListeners("keypress");
