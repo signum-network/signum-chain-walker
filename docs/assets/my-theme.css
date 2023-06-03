@@ -8,10 +8,10 @@
     --menu-item-active-bg: #1e2024;
   }
 }
-:root[data-theme="light"] {
+:root[data-theme='light'] {
   --menu-item-active-bg: #dfe0e2;
 }
-:root[data-theme="dark"] {
+:root[data-theme='dark'] {
   --menu-item-active-bg: #1e2024;
 }
 .tsd-navigation a.current,
@@ -88,7 +88,7 @@
   font-weight: normal;
 }
 
-:root[data-theme="dark"] .menu-item-desc {
+:root[data-theme='dark'] .menu-item-desc {
   color: #989898;
 }
 @media (prefers-color-scheme: dark) {
@@ -135,7 +135,7 @@ code.tsd-tag {
   }
   .container-main.empty-page-menu {
     grid-template-columns: minmax(0, 1fr) minmax(0, 3.5fr) minmax(0, 0);
-    grid-template-areas: "sidebar content";
+    grid-template-areas: 'sidebar content';
   }
 }
 @media (min-width: 770px) and (max-width: 1399px) {

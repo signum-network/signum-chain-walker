@@ -65,7 +65,7 @@ const walker = new ChainWalker({ nodeHost: "http://localhost:6876" })
 
 ## Documentation
 
-Full documentation can be found here
+Full documentation can be found here: [Documentation](https://signum-network.github.io/signum-chain-walker/)
 
 ## Examples
 
