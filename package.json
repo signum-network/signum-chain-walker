@@ -11,7 +11,8 @@
     "prepare": "husky install && npm run build",
     "example:listen": "npm run build:examples && node examples/listen.js",
     "example:walk": "npm run build:examples && node examples/walk.js",
-    "example:walk-listen": "npm run build:examples && node examples/walkAndListen.js"
+    "example:walk-listen": "npm run build:examples && node examples/walkAndListen.js",
+    "docs:generate": "npm run build && readme-api-generator ./dist/chainWalker.js"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,7 @@
   },
   "homepage": "https://github.com/ohager/signum-chain-walker#readme",
   "devDependencies": {
+    "@scalvert/readme-api-generator": "^0.2.4",
     "@types/fs-extra": "^9.0.13",
     "@types/jest": "^29.5.2",
     "@types/node": "^18.11.18",
@@ -34,7 +36,6 @@
     "rimraf": "^5.0.1",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
-    "tsc": "^2.0.4",
     "typescript": "^5.0.4"
   },
   "dependencies": {
