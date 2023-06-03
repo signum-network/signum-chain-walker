@@ -8,11 +8,11 @@
     "test": "jest",
     "build": "rimraf ./dist && tsc",
     "build:examples": "npm run build && rimraf ./examples/*.js && tsc -p tsconfig.examples.json",
+    "build:docs": "readme-api-generator ./dist/chainWalker.js",
     "prepare": "husky install && npm run build",
     "example:listen": "npm run build:examples && node examples/listen.js",
     "example:walk": "npm run build:examples && node examples/walk.js",
-    "example:walk-listen": "npm run build:examples && node examples/walkAndListen.js",
-    "docs:generate": "npm run build && readme-api-generator ./dist/chainWalker.js"
+    "example:walk-listen": "npm run build:examples && node examples/walkAndListen.js"
   },
   "repository": {
     "type": "git",
