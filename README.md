@@ -69,7 +69,7 @@ Full documentation can be found here: [Documentation](https://signum-network.git
 
 ## Examples
 
-> Look into the [examples folder](./examples) for fully functional code.
+> Look into the [examples folder](https://github.com/signum-network/signum-chain-walker/blob/main/examples) for fully functional code.
 
 You can run the examples using:
 

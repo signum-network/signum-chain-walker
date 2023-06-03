@@ -6,3 +6,5 @@
 .env.local
 .env
 *.cache.json
+*.tgz
+

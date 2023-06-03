@@ -1,0 +1,16 @@
+.idea
+node_modules
+docs
+coverage
+.github
+.husky
+src
+sonar-project.properties
+tsconfig.examples.json
+typedoc.json
+tsconfig.json
+jest.config.js
+*.tgz
+*.log
+*.cache.json
+
