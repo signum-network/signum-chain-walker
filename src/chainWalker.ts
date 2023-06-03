@@ -107,7 +107,7 @@ export class ChainWalker {
    * Block Handlers are called after Transaction handlers.
    * @param handler
    */
-  onBlock(handler: BlockHandler): ChainWalker {
+  onBlock(handler: BlockHandler): this {
     this.blockHandler = handler;
     return this;
   }
@@ -118,7 +118,7 @@ export class ChainWalker {
    * Note: that on block handler the transactions are contained also.
    * @param handler
    */
-  onTransaction(handler: TransactionHandler): ChainWalker {
+  onTransaction(handler: TransactionHandler): this {
     this.transactionHandler = handler;
     return this;
   }
@@ -131,7 +131,7 @@ export class ChainWalker {
    *
    * @param handler
    */
-  onPendingTransactions(handler: PendingTransactionsHandler): ChainWalker {
+  onPendingTransactions(handler: PendingTransactionsHandler): this {
     this.pendingTransactionHandler = handler;
     return this;
   }
@@ -140,7 +140,7 @@ export class ChainWalker {
    * Called before the exiting (after the job stopped). Use this to do cleanups on your side
    * @param handler
    */
-  onBeforeQuit(handler: BeforeQuitHandler) {
+  onBeforeQuit(handler: BeforeQuitHandler): this {
     this.beforeQuitHandler = handler;
     return this;
   }
@@ -163,12 +163,12 @@ export class ChainWalker {
    *
    * @note On processing errors this method tries to recover, i.e. retrying several times (p-retry) before it stops.
    */
-  async walk(startHeight?: number) {
+  async walk(startHeight?: number): Promise<void> {
     this.assertHandler();
     this.listenForQuit();
     await this.cache.read();
     const start = Math.max(
-      startHeight || 0,
+      startHeight ?? 0,
       this.cache.getLastProcessedBlock()
     );
     this.logger.info(
@@ -208,7 +208,7 @@ export class ChainWalker {
    * Listens for blocks starting at last mined block.
    * Consider running catchUpBlockchain before, if you need to process the history also.
    */
-  async listen() {
+  async listen(): Promise<void> {
     this.assertHandler();
     if (this.scheduler) {
       this.logger.warn("Already running");
@@ -251,6 +251,9 @@ export class ChainWalker {
     );
   }
 
+  /**
+   * Stops the listener
+   */
   async stop() {
     process.stdin.removeAllListeners("keypress");
     this.logger.info("Shutting down...");

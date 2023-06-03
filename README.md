@@ -59,7 +59,7 @@ const walker = new ChainWalker({ nodeHost: "http://localhost:6876" })
     `This is ${movedSigna.clone().divide(countedTransactions)} per tx`
   );
   console.log(`This is ${movedSigna.clone().divide(countedBlocks)} per block`);
-  process.exit(0);
+  process.exit(0); // graceful shutdown
 })();
 ```
 
