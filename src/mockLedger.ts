@@ -1,5 +1,8 @@
 import { UnconfirmedTransactionList, Block } from "@signumjs/core";
 
+/**
+ * @ignore
+ */
 export interface MockLedger {
   block: {
     getBlockByHeight: (

@@ -19,18 +19,43 @@ import pRetry from "p-retry";
 readline.emitKeypressEvents(process.stdin);
 if (process.stdin.isTTY) process.stdin.setRawMode(true);
 
-type BlockHandler = (block: Block) => Promise<void> | void;
-type TransactionHandler = (tx: Transaction) => Promise<void> | void;
-type PendingTransactionsHandler = (tx: Transaction[]) => Promise<void> | void;
-type BeforeQuitHandler = () => Promise<void> | void;
+/**
+ * Type for handler in {@link ChainWalker.onBlock}
+ *
+ * @note: the block contains transactions also. The block handler is being called, _after_
+ * all {@link TransactionHandler}
+ */
+export type BlockHandler = (block: Block) => Promise<void> | void;
+
+/**
+ * Type for handler in {@link ChainWalker.onTransaction}
+ */
+export type TransactionHandler = (tx: Transaction) => Promise<void> | void;
+
+/**
+ * Type for handler in {@link ChainWalker.onPendingTransactions}
+ * @note This handler is called before {@link TransactionHandler} and {@link BlockHandler}
+ */
+export type PendingTransactionsHandler = (
+  tx: Transaction[]
+) => Promise<void> | void;
+
+/**
+ * Type for handler in {@link ChainWalker.onTransaction}
+ *
+ * Do your cleanups herein, i.e. close db connections etc.
+ */
+export type BeforeQuitHandler = () => Promise<void> | void;
 
 /**
  * The walker configuration object
  */
-interface ChainWalkerConfig {
+export interface ChainWalkerConfig {
   /**
    * The Signum Node Url
-   * Best to use a local node!
+   * Best to use a local node, i.e.
+   * Test Net: http://localhost:6876
+   * Main Net: http://localhost:8125
    */
   nodeHost: string;
   /**
@@ -40,32 +65,34 @@ interface ChainWalkerConfig {
   verbose?: boolean;
   /**
    * Interval in seconds to poll the node
-   * @note Only relevant for [[ChainWalker.listen]]
+   * @note Only relevant for {@link ChainWalker.listen}
    * @default 5
    */
   intervalSeconds?: number;
 
   /**
-   * Retries for processing errors, before surrender.
-   * Only relevant for [[ChainWalker.listen]]
-   * Only relevant for `walk`
+   * Maximum Retries for processing errors, before surrender.
+   * Only relevant for {@link ChainWalker.walk}
    * @default 3
    */
   maxRetries?: number;
 
   /**
    * The file where the listeners status in JSON format can be stored.
-   * @default ./chainwalker.cache.json (current working directory)
+   * @default `./chainwalker.cache.json `(current working directory)
    */
   cachePath?: string;
 
-  /**
+  /*
    * If using a mock ledger, the nodeHost parameter is ignored.
    * The Mock Ledger is for testing purposes.
    */
   mockLedger?: MockLedger;
 }
 
+/**
+ * Default Configuration
+ */
 const DefaultConfig: ChainWalkerConfig = {
   cachePath: join(cwd(), "./chainwalker.cache.json"),
   nodeHost: "http://localhost:8125",
@@ -74,9 +101,26 @@ const DefaultConfig: ChainWalkerConfig = {
 };
 
 /**
- * The ChainWalker allows to either walk from a give block height until the last mined block
+ * The ChainWalker allows to either walk from a given block height until the last mined block
  * and/or to listen to the blockchain.
- * In each mode same callbacks are called, such that blocks and transactions can processed according your needs.
+ *
+ * __Usage Listen Mode__
+ *
+ * When you just need to react on incoming blocks/transactions
+ *
+ * __Usage Walk Mode__
+ *
+ * When you want to gather data from the ledger, i.e. reading past blocks/transactions. Good for analysis, or (re)building a database.
+ *
+ * In each mode the same callbacks are called, such that blocks and transactions can be processed according your needs.
+ *
+ * The callbacks are called in this order:
+ * 1. {@link ChainWalker.onPendingTransactions}
+ * 2. {@link ChainWalker.onTransaction}
+ * 3. {@link ChainWalker.onBlock}
+ *
+ * and when stopping/interrupting {@link ChainWalker.onBeforeQuit}
+ *
  */
 export class ChainWalker {
   private config = DefaultConfig;
@@ -89,14 +133,10 @@ export class ChainWalker {
   // @ts-ignore
   private transactionHandler: TransactionHandler;
   // @ts-ignore
-  private pendingTransactionHandler: PendingTransactionsHandler;
+  private pendingTransactionsHandler: PendingTransactionsHandler;
   private beforeQuitHandler: BeforeQuitHandler = () => Promise.resolve();
   private logger: BaseLogger;
 
-  /**
-   * Constructor
-   * @param {ChainWalkerConfig} config
-   */
   constructor(config: ChainWalkerConfig) {
     this.ledger = config.mockLedger
       ? config.mockLedger
@@ -114,7 +154,7 @@ export class ChainWalker {
   /**
    * Sets the block handler.
    * Block Handlers are called after Transaction handlers.
-   * @param handler
+   * @note: the blocks transactions are attached also.
    */
   onBlock(handler: BlockHandler): this {
     this.blockHandler = handler;
@@ -124,8 +164,7 @@ export class ChainWalker {
   /**
    * Sets the transactions handler.
    * This handler calls once for each transaction in a block.
-   * Note: that on block handler the transactions are contained also.
-   * @param handler
+   * @note: the block handler delivers the transactions also.
    */
   onTransaction(handler: TransactionHandler): this {
     this.transactionHandler = handler;
@@ -137,17 +176,14 @@ export class ChainWalker {
    *
    * Pending transactions handler gives you all pending transactions on all periodical calls.
    * You need to track on your behalf if these transactions were processed by you or not.
-   *
-   * @param handler
    */
   onPendingTransactions(handler: PendingTransactionsHandler): this {
-    this.pendingTransactionHandler = handler;
+    this.pendingTransactionsHandler = handler;
     return this;
   }
 
   /**
    * Called before the exiting (after the job stopped). Use this to do cleanups on your side
-   * @param handler
    */
   onBeforeQuit(handler: BeforeQuitHandler): this {
     this.beforeQuitHandler = handler;
@@ -215,8 +251,8 @@ export class ChainWalker {
 
   /**
    * Listens for blocks starting at last mined block.
-   * Consider running [[catchUpBlockchain]] before, if you need to process the history also.
-   * @note The config parameter `intervalSec
+   * Consider running {@link walk} before, if you need to process the history also.
+   * @note The config parameter {@link ChainWalkerConfig.intervalSeconds}
    */
   async listen(): Promise<void> {
     this.assertHandler();
@@ -262,8 +298,8 @@ export class ChainWalker {
   }
 
   /**
-   * Stops the listener
-   * @note Only relevant for [[listen]]
+   * Stops listener
+   * @note Only relevant for {@link listen}
    */
   async stop() {
     process.stdin.removeAllListeners("keypress");
@@ -277,7 +313,7 @@ export class ChainWalker {
 
   private assertHandler() {
     const hasListener =
-      Boolean(this.pendingTransactionHandler) ||
+      Boolean(this.pendingTransactionsHandler) ||
       Boolean(this.blockHandler) ||
       Boolean(this.transactionHandler);
     if (!hasListener) {
@@ -307,12 +343,12 @@ export class ChainWalker {
     try {
       await this.cache.read();
       processedBlock = this.cache.getLastProcessedBlock();
-      if (this.pendingTransactionHandler) {
+      if (this.pendingTransactionsHandler) {
         this.logger.trace("Fetching pending transactions");
         const { unconfirmedTransactions } =
           await this.ledger.transaction.getUnconfirmedTransactions();
         if (unconfirmedTransactions.length) {
-          await pCall(this.pendingTransactionHandler, unconfirmedTransactions);
+          await pCall(this.pendingTransactionsHandler, unconfirmedTransactions);
         }
       }
 

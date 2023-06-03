@@ -1,5 +1,8 @@
 import { readJSON, writeJSON, pathExists } from "fs-extra";
 
+/**
+ * @ignore
+ */
 interface CacheData {
   lastUpdated: string;
   lastProcessedBlock: number;
@@ -8,6 +11,9 @@ interface CacheData {
   avgProcessingTime: number;
 }
 
+/**
+ * @ignore
+ */
 export class Cache {
   private data: CacheData = {
     lastUpdated: new Date(0).toISOString(),

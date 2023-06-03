@@ -2,6 +2,6 @@
   "$schema": "https://typedoc.org/schema.json",
   "entryPoints": ["src/index.ts"],
   "out": "docs",
-  "plugin": ["@mxssfd/typedoc-theme"],
-  "theme": "my-theme"
+  "plugin": ["typedoc-theme-oxide", "typedoc-plugin-missing-exports"],
+  "excludeExternals": true
 }
