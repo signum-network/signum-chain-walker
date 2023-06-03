@@ -1,6 +1,8 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
+yarn build:docs
 git add -A
+git commit -am "docs: updated" --no-verify
 yarn build
 yarn test

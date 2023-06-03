@@ -3,4 +3,3 @@
 
 npx pretty-quick --staged
 yarn build
-yarn build:docs
