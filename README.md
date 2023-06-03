@@ -1,3 +1,7 @@
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=signum-network_signum-chain-walker&metric=coverage)](https://sonarcloud.io/summary/new_code?id=signum-network_signum-chain-walker)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=signum-network_signum-chain-walker&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=signum-network_signum-chain-walker)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=signum-network_signum-chain-walker&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=signum-network_signum-chain-walker)
+
 # signum-chain-walker
 
 This is a reusable NodeJS server that listens to blocks/transactions and/or walks over the chain.
