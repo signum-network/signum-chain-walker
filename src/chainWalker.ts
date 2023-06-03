@@ -386,9 +386,10 @@ export class ChainWalker {
   private listenForQuit() {
     if (process.env.NODE_ENV === "test") return;
 
-    process.stdin.once("keypress", async (chunk, key) => {
-      if (key && key.name === "q") await this.stop();
-      process.exit();
+    process.stdin.once("keypress", (chunk, key) => {
+      if (key && key.name === "q") {
+        this.stop().then(() => process.exit());
+      }
     });
   }
 
