@@ -7,4 +7,5 @@
 .env
 *.cache.json
 *.tgz
+.pre-commit
 

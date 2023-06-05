@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+if [ -e .pre-commit ]
+    then
+    rm .pre-commit
+    git add yourfile
+    git commit --amend -C HEAD --no-verify
+fi
+exit
