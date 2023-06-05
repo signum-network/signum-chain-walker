@@ -8,4 +8,5 @@
 *.cache.json
 *.tgz
 .pre-commit
+*.log
 
