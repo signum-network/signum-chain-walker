@@ -36,7 +36,7 @@ and/or to listen to the blockchain.</p>
 <ul class="tsd-hierarchy">
 <li><span class="target">ChainWalker</span></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/b56cf6b/src/chainWalker.ts#L125">chainWalker.ts:125</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/ac8a064/src/chainWalker.ts#L125">chainWalker.ts:125</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -56,7 +56,12 @@ and/or to listen to the blockchain.</p>
 <a href="ChainWalker.html#logger" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>logger</span></a>
 <a href="ChainWalker.html#pendingTransactionsHandler" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>pending<wbr/>Transactions<wbr/>Handler</span></a>
 <a href="ChainWalker.html#scheduler" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>scheduler</span></a>
+<a href="ChainWalker.html#stopRequested" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>stop<wbr/>Requested</span></a>
 <a href="ChainWalker.html#transactionHandler" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>transaction<wbr/>Handler</span></a>
+</div></section>
+<section class="tsd-index-section">
+<h3 class="tsd-index-heading">Accessors</h3>
+<div class="tsd-index-list"><a href="ChainWalker.html#ledgerClient" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF4D4D" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-262144-path"></rect><path d="M8.85 16L11.13 7.24H12.582L14.85 16H13.758L13.182 13.672H10.53L9.954 16H8.85ZM10.746 12.76H12.954L12.282 10.06C12.154 9.548 12.054 9.12 11.982 8.776C11.91 8.432 11.866 8.208 11.85 8.104C11.834 8.208 11.79 8.432 11.718 8.776C11.646 9.12 11.546 9.544 11.418 10.048L10.746 12.76Z" fill="var(--color-text)" id="icon-262144-text"></path></svg><span>ledger<wbr/>Client</span></a>
 </div></section>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Methods</h3>
@@ -84,57 +89,74 @@ and/or to listen to the blockchain.</p>
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">config</span>: <a href="../interfaces/_internal_.ChainWalkerConfig.html" class="tsd-signature-type tsd-kind-interface">ChainWalkerConfig</a></h5></li></ul></div>
+<h5><span class="tsd-kind-parameter">config</span>: <a href="../interfaces/ChainWalkerConfig.html" class="tsd-signature-type tsd-kind-interface">ChainWalkerConfig</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="ChainWalker.html" class="tsd-signature-type tsd-kind-class">ChainWalker</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/b56cf6b/src/chainWalker.ts#L140">chainWalker.ts:140</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/ac8a064/src/chainWalker.ts#L141">chainWalker.ts:141</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="beforeQuitHandler" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>before<wbr/>Quit<wbr/>Handler</span><a href="#beforeQuitHandler" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature"><span class="tsd-kind-property">before<wbr/>Quit<wbr/>Handler</span><span class="tsd-signature-symbol">:</span> <a href="../types/_internal_.BeforeQuitHandler.html" class="tsd-signature-type tsd-kind-type-alias">BeforeQuitHandler</a><span class="tsd-signature-symbol"> = ...</span></div><aside class="tsd-sources">
+<div class="tsd-signature"><span class="tsd-kind-property">before<wbr/>Quit<wbr/>Handler</span><span class="tsd-signature-symbol">:</span> <a href="../types/BeforeQuitHandler.html" class="tsd-signature-type tsd-kind-type-alias">BeforeQuitHandler</a><span class="tsd-signature-symbol"> = ...</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/b56cf6b/src/chainWalker.ts#L137">chainWalker.ts:137</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/ac8a064/src/chainWalker.ts#L137">chainWalker.ts:137</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="blockHandler" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>block<wbr/>Handler</span><a href="#blockHandler" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature"><span class="tsd-kind-property">block<wbr/>Handler</span><span class="tsd-signature-symbol">:</span> <a href="../types/_internal_.BlockHandler.html" class="tsd-signature-type tsd-kind-type-alias">BlockHandler</a></div><aside class="tsd-sources">
+<div class="tsd-signature"><span class="tsd-kind-property">block<wbr/>Handler</span><span class="tsd-signature-symbol">:</span> <a href="../types/BlockHandler.html" class="tsd-signature-type tsd-kind-type-alias">BlockHandler</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/b56cf6b/src/chainWalker.ts#L132">chainWalker.ts:132</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/ac8a064/src/chainWalker.ts#L132">chainWalker.ts:132</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="cache" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>cache</span><a href="#cache" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">cache</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type ">Cache</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/b56cf6b/src/chainWalker.ts#L130">chainWalker.ts:130</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/ac8a064/src/chainWalker.ts#L130">chainWalker.ts:130</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="config" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>config</span><a href="#config" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature"><span class="tsd-kind-property">config</span><span class="tsd-signature-symbol">:</span> <a href="../interfaces/_internal_.ChainWalkerConfig.html" class="tsd-signature-type tsd-kind-interface">ChainWalkerConfig</a><span class="tsd-signature-symbol"> = DefaultConfig</span></div><aside class="tsd-sources">
+<div class="tsd-signature"><span class="tsd-kind-property">config</span><span class="tsd-signature-symbol">:</span> <a href="../interfaces/ChainWalkerConfig.html" class="tsd-signature-type tsd-kind-interface">ChainWalkerConfig</a><span class="tsd-signature-symbol"> = DefaultConfig</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/b56cf6b/src/chainWalker.ts#L126">chainWalker.ts:126</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/ac8a064/src/chainWalker.ts#L126">chainWalker.ts:126</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="ledger" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>ledger</span><a href="#ledger" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">ledger</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type ">MockLedger</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type ">Api</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/b56cf6b/src/chainWalker.ts#L127">chainWalker.ts:127</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/ac8a064/src/chainWalker.ts#L127">chainWalker.ts:127</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="logger" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>logger</span><a href="#logger" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">logger</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type ">BaseLogger</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/b56cf6b/src/chainWalker.ts#L138">chainWalker.ts:138</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/ac8a064/src/chainWalker.ts#L138">chainWalker.ts:138</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="pendingTransactionsHandler" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>pending<wbr/>Transactions<wbr/>Handler</span><a href="#pendingTransactionsHandler" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature"><span class="tsd-kind-property">pending<wbr/>Transactions<wbr/>Handler</span><span class="tsd-signature-symbol">:</span> <a href="../types/_internal_.PendingTransactionsHandler.html" class="tsd-signature-type tsd-kind-type-alias">PendingTransactionsHandler</a></div><aside class="tsd-sources">
+<div class="tsd-signature"><span class="tsd-kind-property">pending<wbr/>Transactions<wbr/>Handler</span><span class="tsd-signature-symbol">:</span> <a href="../types/PendingTransactionsHandler.html" class="tsd-signature-type tsd-kind-type-alias">PendingTransactionsHandler</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/b56cf6b/src/chainWalker.ts#L136">chainWalker.ts:136</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/ac8a064/src/chainWalker.ts#L136">chainWalker.ts:136</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="scheduler" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>scheduler</span><a href="#scheduler" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">scheduler</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type ">ToadScheduler</span><span class="tsd-signature-symbol"> = null</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/b56cf6b/src/chainWalker.ts#L128">chainWalker.ts:128</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/ac8a064/src/chainWalker.ts#L128">chainWalker.ts:128</a></li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-private"><a id="stopRequested" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>stop<wbr/>Requested</span><a href="#stopRequested" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">stop<wbr/>Requested</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/ac8a064/src/chainWalker.ts#L139">chainWalker.ts:139</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="transactionHandler" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>transaction<wbr/>Handler</span><a href="#transactionHandler" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature"><span class="tsd-kind-property">transaction<wbr/>Handler</span><span class="tsd-signature-symbol">:</span> <a href="../types/_internal_.TransactionHandler.html" class="tsd-signature-type tsd-kind-type-alias">TransactionHandler</a></div><aside class="tsd-sources">
+<div class="tsd-signature"><span class="tsd-kind-property">transaction<wbr/>Handler</span><span class="tsd-signature-symbol">:</span> <a href="../types/TransactionHandler.html" class="tsd-signature-type tsd-kind-type-alias">TransactionHandler</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/b56cf6b/src/chainWalker.ts#L134">chainWalker.ts:134</a></li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/ac8a064/src/chainWalker.ts#L134">chainWalker.ts:134</a></li></ul></aside></section></section>
+<section class="tsd-panel-group tsd-member-group">
+<h2>Accessors</h2>
+<section class="tsd-panel tsd-member"><a id="ledgerClient" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>ledger<wbr/>Client</span><a href="#ledgerClient" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature" id="ledgerClient.ledgerClient-1"><span class="tsd-signature-symbol">get</span> ledgerClient<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Api</span></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Api</span></h4><p>the internal ledger client</p>
+<aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/ac8a064/src/chainWalker.ts#L158">chainWalker.ts:158</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="assertHandler" class="tsd-anchor"></a>
@@ -144,7 +166,7 @@ and/or to listen to the blockchain.</p>
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/b56cf6b/src/chainWalker.ts#L314">chainWalker.ts:314</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/ac8a064/src/chainWalker.ts#L321">chainWalker.ts:321</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="fetchBlock" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>fetch<wbr/>Block</span><a href="#fetchBlock" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -157,7 +179,7 @@ and/or to listen to the blockchain.</p>
 <h5><span class="tsd-kind-parameter">height</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type ">Block</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/b56cf6b/src/chainWalker.ts#L326">chainWalker.ts:326</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/ac8a064/src/chainWalker.ts#L333">chainWalker.ts:333</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="fetchCurrentBlockHeight" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>fetch<wbr/>Current<wbr/>Block<wbr/>Height</span><a href="#fetchCurrentBlockHeight" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -165,7 +187,7 @@ and/or to listen to the blockchain.</p>
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/b56cf6b/src/chainWalker.ts#L445">chainWalker.ts:445</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/ac8a064/src/chainWalker.ts#L452">chainWalker.ts:452</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="listen" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>listen</span><a href="#listen" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -174,11 +196,11 @@ and/or to listen to the blockchain.</p>
 <div class="tsd-comment tsd-typography"><p>Listens for blocks starting at last mined block.
 Consider running <a href="ChainWalker.html#walk" class="tsd-kind-method">walk</a> before, if you need to process the history also.</p>
 
-<h3>Note</h3><p>The config parameter <a href="../interfaces/_internal_.ChainWalkerConfig.html#intervalSeconds" class="tsd-kind-property">intervalSeconds</a></p>
+<h3>Note</h3><p>The config parameter <a href="../interfaces/ChainWalkerConfig.html#intervalSeconds" class="tsd-kind-property">intervalSeconds</a></p>
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/b56cf6b/src/chainWalker.ts#L257">chainWalker.ts:257</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/ac8a064/src/chainWalker.ts#L264">chainWalker.ts:264</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="listenForQuit" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>listen<wbr/>For<wbr/>Quit</span><a href="#listenForQuit" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -186,7 +208,7 @@ Consider running <a href="ChainWalker.html#walk" class="tsd-kind-method">walk</a
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/b56cf6b/src/chainWalker.ts#L433">chainWalker.ts:433</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/ac8a064/src/chainWalker.ts#L440">chainWalker.ts:440</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="onBeforeQuit" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>on<wbr/>Before<wbr/>Quit</span><a href="#onBeforeQuit" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -198,27 +220,28 @@ Consider running <a href="ChainWalker.html#walk" class="tsd-kind-method">walk</a
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">handler</span>: <a href="../types/_internal_.BeforeQuitHandler.html" class="tsd-signature-type tsd-kind-type-alias">BeforeQuitHandler</a></h5></li></ul></div>
+<h5><span class="tsd-kind-parameter">handler</span>: <a href="../types/BeforeQuitHandler.html" class="tsd-signature-type tsd-kind-type-alias">BeforeQuitHandler</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="ChainWalker.html" class="tsd-signature-type tsd-kind-class">ChainWalker</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/b56cf6b/src/chainWalker.ts#L188">chainWalker.ts:188</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/ac8a064/src/chainWalker.ts#L195">chainWalker.ts:195</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="onBlock" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>on<wbr/>Block</span><a href="#onBlock" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
 <li class="tsd-signature tsd-anchor-link" id="onBlock.onBlock-1"><span class="tsd-kind-call-signature">on<wbr/>Block</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">handler</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ChainWalker.html" class="tsd-signature-type tsd-kind-class">ChainWalker</a><a href="#onBlock.onBlock-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Sets the block handler.
-Block Handlers are called after Transaction handlers.
-@note: the blocks transactions are attached also.</p>
+Block Handlers are called after Transaction handlers.</p>
+
+<h3>Note</h3><p>the blocks transactions are attached also.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">handler</span>: <a href="../types/_internal_.BlockHandler.html" class="tsd-signature-type tsd-kind-type-alias">BlockHandler</a></h5></li></ul></div>
+<h5><span class="tsd-kind-parameter">handler</span>: <a href="../types/BlockHandler.html" class="tsd-signature-type tsd-kind-type-alias">BlockHandler</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="ChainWalker.html" class="tsd-signature-type tsd-kind-class">ChainWalker</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/b56cf6b/src/chainWalker.ts#L159">chainWalker.ts:159</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/ac8a064/src/chainWalker.ts#L166">chainWalker.ts:166</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="onPendingTransactions" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>on<wbr/>Pending<wbr/>Transactions</span><a href="#onPendingTransactions" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -232,27 +255,28 @@ You need to track on your behalf if these transactions were processed by you or 
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">handler</span>: <a href="../types/_internal_.PendingTransactionsHandler.html" class="tsd-signature-type tsd-kind-type-alias">PendingTransactionsHandler</a></h5></li></ul></div>
+<h5><span class="tsd-kind-parameter">handler</span>: <a href="../types/PendingTransactionsHandler.html" class="tsd-signature-type tsd-kind-type-alias">PendingTransactionsHandler</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="ChainWalker.html" class="tsd-signature-type tsd-kind-class">ChainWalker</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/b56cf6b/src/chainWalker.ts#L180">chainWalker.ts:180</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/ac8a064/src/chainWalker.ts#L187">chainWalker.ts:187</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="onTransaction" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>on<wbr/>Transaction</span><a href="#onTransaction" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
 <li class="tsd-signature tsd-anchor-link" id="onTransaction.onTransaction-1"><span class="tsd-kind-call-signature">on<wbr/>Transaction</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">handler</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ChainWalker.html" class="tsd-signature-type tsd-kind-class">ChainWalker</a><a href="#onTransaction.onTransaction-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Sets the transactions handler.
-This handler calls once for each transaction in a block.
-@note: the block handler delivers the transactions also.</p>
+This handler calls once for each transaction in a block.</p>
+
+<h3>Note</h3><p>the block handler delivers the transactions also.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">handler</span>: <a href="../types/_internal_.TransactionHandler.html" class="tsd-signature-type tsd-kind-type-alias">TransactionHandler</a></h5></li></ul></div>
+<h5><span class="tsd-kind-parameter">handler</span>: <a href="../types/TransactionHandler.html" class="tsd-signature-type tsd-kind-type-alias">TransactionHandler</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="ChainWalker.html" class="tsd-signature-type tsd-kind-class">ChainWalker</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/b56cf6b/src/chainWalker.ts#L169">chainWalker.ts:169</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/ac8a064/src/chainWalker.ts#L176">chainWalker.ts:176</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="process" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>process</span><a href="#process" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -260,19 +284,17 @@ This handler calls once for each transaction in a block.
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{ </span><br/><span>    </span><span class="tsd-kind-property">processedBlock</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-kind-property">processingError</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/b56cf6b/src/chainWalker.ts#L337">chainWalker.ts:337</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/ac8a064/src/chainWalker.ts#L344">chainWalker.ts:344</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="stop" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>stop</span><a href="#stop" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
 <li class="tsd-signature tsd-anchor-link" id="stop.stop-1"><span class="tsd-kind-call-signature">stop</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#stop.stop-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Stops listener</p>
-
-<h3>Note</h3><p>Only relevant for <a href="ChainWalker.html#listen" class="tsd-kind-method">listen</a></p>
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/b56cf6b/src/chainWalker.ts#L304">chainWalker.ts:304</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/ac8a064/src/chainWalker.ts#L310">chainWalker.ts:310</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="walk" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>walk</span><a href="#walk" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -299,7 +321,7 @@ If you really want to start from scratch you need to delete the cache file.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/b56cf6b/src/chainWalker.ts#L211">chainWalker.ts:211</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/signum-network/signum-chain-walker/blob/ac8a064/src/chainWalker.ts#L218">chainWalker.ts:218</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -327,7 +349,9 @@ If you really want to start from scratch you need to delete the cache file.</p>
 <li><a href="#logger" class="tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>logger</span></a></li>
 <li><a href="#pendingTransactionsHandler" class="tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>pending<wbr/>Transactions<wbr/>Handler</span></a></li>
 <li><a href="#scheduler" class="tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>scheduler</span></a></li>
+<li><a href="#stopRequested" class="tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>stop<wbr/>Requested</span></a></li>
 <li><a href="#transactionHandler" class="tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>transaction<wbr/>Handler</span></a></li>
+<li><a href="#ledgerClient" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-262144-path"></use><use href="#icon-262144-text"></use></svg><span>ledger<wbr/>Client</span></a></li>
 <li><a href="#assertHandler" class="tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>assert<wbr/>Handler</span></a></li>
 <li><a href="#fetchBlock" class="tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>fetch<wbr/>Block</span></a></li>
 <li><a href="#fetchCurrentBlockHeight" class="tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>fetch<wbr/>Current<wbr/>Block<wbr/>Height</span></a></li>
@@ -343,16 +367,13 @@ If you really want to start from scratch you need to delete the cache file.</p>
 <div class="site-menu">
 <nav class="tsd-navigation"><a href="../modules.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-namespace)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-4-path"></rect><path d="M9.33 16V7.24H10.77L13.446 14.74C13.43 14.54 13.41 14.296 13.386 14.008C13.37 13.712 13.354 13.404 13.338 13.084C13.33 12.756 13.326 12.448 13.326 12.16V7.24H14.37V16H12.93L10.266 8.5C10.282 8.692 10.298 8.936 10.314 9.232C10.33 9.52 10.342 9.828 10.35 10.156C10.366 10.476 10.374 10.784 10.374 11.08V16H9.33Z" fill="var(--color-text)" id="icon-4-text"></path></svg><span>signum-<wbr/>chain-<wbr/>walker</span></a>
 <ul class="tsd-small-nested-navigation">
-<li>
-<details class="tsd-index-accordion" data-key="<internal>"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg><a href="../modules/_internal_.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>&lt;internal&gt;</span></a></summary>
-<div class="tsd-accordion-details">
-<ul class="tsd-nested-navigation">
-<li><a href="../interfaces/_internal_.ChainWalkerConfig.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-256-path"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)" id="icon-256-text"></path></svg><span>Chain<wbr/>Walker<wbr/>Config</span></a></li>
-<li><a href="../types/_internal_.BeforeQuitHandler.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-type-alias)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-4194304-path"></rect><path d="M11.31 16V8.224H8.91V7.24H14.79V8.224H12.39V16H11.31Z" fill="var(--color-text)" id="icon-4194304-text"></path></svg><span>Before<wbr/>Quit<wbr/>Handler</span></a></li>
-<li><a href="../types/_internal_.BlockHandler.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg><span>Block<wbr/>Handler</span></a></li>
-<li><a href="../types/_internal_.PendingTransactionsHandler.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg><span>Pending<wbr/>Transactions<wbr/>Handler</span></a></li>
-<li><a href="../types/_internal_.TransactionHandler.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg><span>Transaction<wbr/>Handler</span></a></li></ul></div></details></li>
-<li><a href="ChainWalker.html" class="current"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-class)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-128-path"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)" id="icon-128-text"></path></svg><span>Chain<wbr/>Walker</span></a></li></ul></nav></div></div></div>
+<li><a href="../modules/_internal_.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4-path"></use><use href="#icon-4-text"></use></svg><span>&lt;internal&gt;</span></a></li>
+<li><a href="ChainWalker.html" class="current"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-class)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-128-path"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)" id="icon-128-text"></path></svg><span>Chain<wbr/>Walker</span></a></li>
+<li><a href="../interfaces/ChainWalkerConfig.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-256-path"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)" id="icon-256-text"></path></svg><span>Chain<wbr/>Walker<wbr/>Config</span></a></li>
+<li><a href="../types/BeforeQuitHandler.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-type-alias)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-4194304-path"></rect><path d="M11.31 16V8.224H8.91V7.24H14.79V8.224H12.39V16H11.31Z" fill="var(--color-text)" id="icon-4194304-text"></path></svg><span>Before<wbr/>Quit<wbr/>Handler</span></a></li>
+<li><a href="../types/BlockHandler.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg><span>Block<wbr/>Handler</span></a></li>
+<li><a href="../types/PendingTransactionsHandler.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg><span>Pending<wbr/>Transactions<wbr/>Handler</span></a></li>
+<li><a href="../types/TransactionHandler.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg><span>Transaction<wbr/>Handler</span></a></li></ul></nav></div></div></div>
 <div class="tsd-generator">
 <p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
 <div class="overlay"></div></body></html>
