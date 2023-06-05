@@ -18,6 +18,7 @@ const BlockTimeSeconds = 240;
 class AccountChangeListener {
   private readonly accountId: string;
   private chainWalker: ChainWalker;
+  // @ts-ignore
   private accountHandler: OnAccountChangeHandler;
 
   constructor(accountIdOrAddress: string, walkerConfig: ChainWalkerConfig) {

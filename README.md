@@ -82,3 +82,4 @@ You can run the examples using:
 - `npm run example:listen`
 - `npm run example:walk`
 - `npm run example:walk-listen`
+- `npm run example:account-listen`

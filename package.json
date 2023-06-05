@@ -1,6 +1,6 @@
 {
   "name": "signum-chain-walker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "dist/index.js",
   "private": false,
@@ -12,7 +12,8 @@
     "prepare": "husky install && npm run build",
     "example:listen": "npm run build:examples && node examples/listen.js",
     "example:walk": "npm run build:examples && node examples/walk.js",
-    "example:walk-listen": "npm run build:examples && node examples/walkAndListen.js"
+    "example:walk-listen": "npm run build:examples && node examples/walkAndListen.js",
+    "example:account-listen": "npm run build:examples && node examples/accountChangeListener.js"
   },
   "repository": {
     "type": "git",
