@@ -4,7 +4,7 @@
 if [ -e .pre-commit ]
     then
     rm .pre-commit
-    git add yourfile
+    git add -A
     git commit --amend -C HEAD --no-verify
 fi
 exit
