@@ -3,6 +3,7 @@ import {
   Account,
   Address,
   getRecipientAmountsFromMultiOutPayment,
+  Ledger,
   Transaction,
   TransactionAssetSubtype,
   TransactionType,
@@ -41,7 +42,7 @@ class AccountChangeListener {
   /**
    * Checks if a transaction affects the given account
    */
-  private async isAccountAffected(tx: Transaction) {
+  private async isAccountAffected(tx: Transaction, ledgerClient: Ledger) {
     if (tx.sender === this.accountId) return true;
     if (tx.recipient === this.accountId) return true;
     // checks for multi out recipient
@@ -59,7 +60,7 @@ class AccountChangeListener {
     ) {
       try {
         // getDistributionAmountsFromTransaction throws error when not exists
-        await this.chainWalker.ledgerClient.transaction.getDistributionAmountsFromTransaction(
+        await ledgerClient.transaction.getDistributionAmountsFromTransaction(
           tx.transaction,
           this.accountId
         );
@@ -76,10 +77,10 @@ class AccountChangeListener {
     if (!this.accountHandler) {
       throw new Error("No account handler set - aborting");
     }
-    this.chainWalker.onTransaction(async (tx) => {
-      const shouldCall = await this.isAccountAffected(tx);
+    this.chainWalker.onTransaction(async (tx, { ledgerClient }) => {
+      const shouldCall = await this.isAccountAffected(tx, ledgerClient);
       if (shouldCall) {
-        const account = await this.chainWalker.ledgerClient.account.getAccount({
+        const account = await ledgerClient.account.getAccount({
           accountId: this.accountId,
         });
         await this.accountHandler(account);

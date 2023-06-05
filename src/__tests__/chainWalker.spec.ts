@@ -1,4 +1,4 @@
-import { ChainWalker } from "../chainWalker";
+import { ChainWalker, ChainWalkerContext } from "../chainWalker";
 import { TestLedger } from "./mocks/testLedger";
 import { Block, Transaction } from "@signumjs/core";
 
@@ -48,7 +48,11 @@ describe("chainWalker", () => {
     });
     it("should sync with blockchain - using a startHeight", async () => {
       let block: any = null;
-      const handler = jest.fn().mockImplementation((b) => (block = b));
+      let ctx: ChainWalkerContext | null = null;
+      const handler = jest.fn().mockImplementation((b, c) => {
+        block = b;
+        ctx = c;
+      });
 
       const walker = new ChainWalker({
         verbose: IsVerbose,
@@ -60,6 +64,9 @@ describe("chainWalker", () => {
       await walker.stop();
       expect(handler).toBeCalledTimes(2);
       expect(block?.height).toBe(552094); // mock Ledger
+      expect(ctx).not.toBeNull();
+      // @ts-ignore
+      expect(ctx.ledgerClient).toBeDefined();
     });
     it("should sync with blockchain - using a startHeight and using all callbacks", async () => {
       let block: any = null;

@@ -20,24 +20,39 @@ readline.emitKeypressEvents(process.stdin);
 if (process.stdin.isTTY) process.stdin.setRawMode(true);
 
 /**
+ * The context passed on handlers
+ *
+ */
+export interface ChainWalkerContext {
+  ledgerClient: Ledger;
+}
+
+/**
  * Type for handler in {@link ChainWalker.onBlock}
  *
  * @note: the block contains transactions also. The block handler is being called, _after_
  * all {@link TransactionHandler}
  */
-export type BlockHandler = (block: Block) => Promise<void> | void;
+export type BlockHandler = (
+  block: Block,
+  ctx: ChainWalkerContext
+) => Promise<void> | void;
 
 /**
  * Type for handler in {@link ChainWalker.onTransaction}
  */
-export type TransactionHandler = (tx: Transaction) => Promise<void> | void;
+export type TransactionHandler = (
+  tx: Transaction,
+  ctx: ChainWalkerContext
+) => Promise<void> | void;
 
 /**
  * Type for handler in {@link ChainWalker.onPendingTransactions}
  * @note This handler is called before {@link TransactionHandler} and {@link BlockHandler}
  */
 export type PendingTransactionsHandler = (
-  tx: Transaction[]
+  tx: Transaction[],
+  ctx: ChainWalkerContext
 ) => Promise<void> | void;
 
 /**
@@ -45,7 +60,9 @@ export type PendingTransactionsHandler = (
  *
  * Do your cleanups herein, i.e. close db connections etc.
  */
-export type BeforeQuitHandler = () => Promise<void> | void;
+export type BeforeQuitHandler = (
+  ctx: ChainWalkerContext
+) => Promise<void> | void;
 
 /**
  * The walker configuration object
@@ -315,7 +332,10 @@ export class ChainWalker {
       this.scheduler.stop();
       this.scheduler = null;
     }
-    await pCall(this.beforeQuitHandler);
+    const context: ChainWalkerContext = {
+      ledgerClient: this.ledgerClient,
+    };
+    await pCall(this.beforeQuitHandler, context);
   }
 
   private assertHandler() {
@@ -347,6 +367,9 @@ export class ChainWalker {
     let processingError = "";
     let processedBlock = -1;
     const started = Date.now();
+    const context: ChainWalkerContext = {
+      ledgerClient: this.ledgerClient,
+    };
     try {
       await this.cache.read();
       processedBlock = this.cache.getLastProcessedBlock();
@@ -355,7 +378,11 @@ export class ChainWalker {
         const { unconfirmedTransactions } =
           await this.ledger.transaction.getUnconfirmedTransactions();
         if (unconfirmedTransactions.length) {
-          await pCall(this.pendingTransactionsHandler, unconfirmedTransactions);
+          await pCall(
+            this.pendingTransactionsHandler,
+            unconfirmedTransactions,
+            context
+          );
         }
       }
 
@@ -391,7 +418,7 @@ export class ChainWalker {
           this.logger.trace(
             `Calling handler for transaction: ${tx.transaction}`
           );
-          await pCall(this.transactionHandler, tx);
+          await pCall(this.transactionHandler, tx, context);
           delete unprocessedTxIds[tx.transaction];
           this.logger.trace(`Processed transaction: ${tx.transaction}`);
         }
@@ -399,7 +426,7 @@ export class ChainWalker {
 
       if (this.blockHandler) {
         this.logger.trace(`Calling handler for block: ${block.height}`);
-        await pCall(this.blockHandler, block);
+        await pCall(this.blockHandler, block, context);
         this.logger.trace(`Processed block: ${block.height}`);
       }
       processedBlock = block.height;
