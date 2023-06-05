@@ -4,14 +4,32 @@ import { Block, Transaction } from "@signumjs/core";
 
 const IsVerbose = false;
 
-function sleep(durationMillies: number) {
+function sleep(durationMillies: number): Promise<void> {
   return new Promise((resolve) => {
     setTimeout(resolve, durationMillies);
   });
 }
 
 describe("chainWalker", () => {
-  describe("syncLedger", () => {
+  describe("stop", () => {
+    it("should stop listen()", async () => {
+      const walker = new ChainWalker({
+        verbose: IsVerbose,
+        mockLedger: TestLedger,
+        nodeHost: "",
+        cachePath: "",
+      }).onBlock((b) => {
+        return sleep(1000);
+      });
+      setTimeout(async () => {
+        await walker.stop();
+      }, 500);
+      const start = Date.now();
+      await walker.walk(552092);
+      expect(Date.now() - start > 1000).toBeTruthy();
+    });
+  });
+  describe("walk", () => {
     it("must throw error if no handler is set", async () => {
       const walker = new ChainWalker({
         verbose: IsVerbose,

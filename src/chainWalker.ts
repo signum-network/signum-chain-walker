@@ -90,7 +90,7 @@ export interface ChainWalkerConfig {
   mockLedger?: MockLedger;
 }
 
-/**
+/*
  * Default Configuration
  */
 const DefaultConfig: ChainWalkerConfig = {
@@ -136,6 +136,7 @@ export class ChainWalker {
   private pendingTransactionsHandler: PendingTransactionsHandler;
   private beforeQuitHandler: BeforeQuitHandler = () => Promise.resolve();
   private logger: BaseLogger;
+  private stopRequested = false;
 
   constructor(config: ChainWalkerConfig) {
     this.ledger = config.mockLedger
@@ -152,9 +153,15 @@ export class ChainWalker {
   }
 
   /**
+   * @return the internal ledger client
+   */
+  get ledgerClient(): Ledger {
+    return this.ledger as Ledger;
+  }
+  /**
    * Sets the block handler.
    * Block Handlers are called after Transaction handlers.
-   * @note: the blocks transactions are attached also.
+   * @note the blocks transactions are attached also.
    */
   onBlock(handler: BlockHandler): this {
     this.blockHandler = handler;
@@ -164,7 +171,7 @@ export class ChainWalker {
   /**
    * Sets the transactions handler.
    * This handler calls once for each transaction in a block.
-   * @note: the block handler delivers the transactions also.
+   * @note the block handler delivers the transactions also.
    */
   onTransaction(handler: TransactionHandler): this {
     this.transactionHandler = handler;
@@ -225,7 +232,7 @@ export class ChainWalker {
     await this.cache.persist();
     const height = await this.fetchCurrentBlockHeight();
     let processedBlock = start;
-    while (processedBlock < height) {
+    while (processedBlock < height && !this.stopRequested) {
       processedBlock = await pRetry(
         async () => {
           const { processingError, processedBlock } = await this.process();
@@ -299,16 +306,16 @@ export class ChainWalker {
 
   /**
    * Stops listener
-   * @note Only relevant for {@link listen}
    */
   async stop() {
     process.stdin.removeAllListeners("keypress");
     this.logger.info("Shutting down...");
-    await pCall(this.beforeQuitHandler);
+    this.stopRequested = true;
     if (this.scheduler) {
       this.scheduler.stop();
       this.scheduler = null;
     }
+    await pCall(this.beforeQuitHandler);
   }
 
   private assertHandler() {

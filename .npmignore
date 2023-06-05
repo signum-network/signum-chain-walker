@@ -5,6 +5,7 @@ coverage
 .github
 .husky
 src
+examples
 sonar-project.properties
 tsconfig.examples.json
 typedoc.json

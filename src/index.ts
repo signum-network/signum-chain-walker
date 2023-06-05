@@ -1,1 +1,1 @@
-export { ChainWalker } from "./chainWalker";
+export * from "./chainWalker";
