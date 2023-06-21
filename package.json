@@ -1,6 +1,6 @@
 {
   "name": "signum-chain-walker",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "dist/index.js",
   "private": false,
@@ -17,14 +17,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ohager/signum-chain-walker.git"
+    "url": "git+https://github.com/signum-network/signum-chain-walker.git"
   },
   "author": "ohager",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ohager/signum-chain-walker/issues"
+    "url": "https://github.com/signum-network/signum-chain-walker/issues"
   },
-  "homepage": "https://github.com/ohager/signum-chain-walker#readme",
+  "homepage": "https://github.com/signum-network/signum-chain-walker#readme",
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",
     "@types/jest": "^29.5.2",
