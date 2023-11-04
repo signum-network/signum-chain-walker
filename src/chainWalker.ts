@@ -16,9 +16,6 @@ import { MockLedger } from "./mockLedger";
 import { pCall } from "./pCall";
 import pRetry from "p-retry";
 
-readline.emitKeypressEvents(process.stdin);
-if (process.stdin.isTTY) process.stdin.setRawMode(true);
-
 /**
  * The context passed on handlers
  *
@@ -100,11 +97,27 @@ export interface ChainWalkerConfig {
    */
   cachePath?: string;
 
-  /*
+  /**
    * If using a mock ledger, the nodeHost parameter is ignored.
    * The Mock Ledger is for testing purposes.
    */
   mockLedger?: MockLedger;
+
+  /**
+   * Sets the offset of a block to be behind the most current block.
+   * A blockchain can have forks, usually some micro-forks, which can cause
+   * that transactions within a fork are "off-sync" with the main branch and
+   * some automatic pop-offs revert the transactions.
+   * Set this value when you almost want to be sure that a transaction is actually settled.
+   * If e.g. the value is set to 2, the block will be 2 blocks behind the current block.
+   * Example:
+   * The chain is on block 1_000_000 and the offset is set to 2, then the walker/listener triggers
+   * for block 999_998. The offset is 1, so the walker/listener triggers for block 999_999.
+   *
+   * The higher the value the more likely that a transaction is actually settled. Usually, an offset of 2 gives very good guarantees
+   * @default 0
+   */
+  blockOffset?: number;
 }
 
 /*
@@ -115,6 +128,7 @@ const DefaultConfig: ChainWalkerConfig = {
   nodeHost: "http://localhost:8125",
   intervalSeconds: 5,
   maxRetries: 3,
+  blockOffset: 0,
 };
 
 /**
@@ -175,6 +189,7 @@ export class ChainWalker {
   get ledgerClient(): Ledger {
     return this.ledger as Ledger;
   }
+
   /**
    * Sets the block handler.
    * Block Handlers are called after Transaction handlers.
@@ -200,6 +215,7 @@ export class ChainWalker {
    *
    * Pending transactions handler gives you all pending transactions on all periodical calls.
    * You need to track on your behalf if these transactions were processed by you or not.
+   * This method ignores `blockOffset`.
    */
   onPendingTransactions(handler: PendingTransactionsHandler): this {
     this.pendingTransactionsHandler = handler;
@@ -285,10 +301,10 @@ export class ChainWalker {
       return;
     }
 
-    const currentBlockHeight = await this.fetchCurrentBlockHeight();
+    const blockHeight = await this.fetchCurrentBlockHeight();
     await this.cache.read();
     this.cache.update({
-      lastProcessedBlock: currentBlockHeight,
+      lastProcessedBlock: blockHeight,
     });
     await this.cache.persist();
 
@@ -467,12 +483,22 @@ export class ChainWalker {
   private listenForQuit() {
     if (process.env.NODE_ENV === "test") return;
 
-    process.stdin.once("keypress", async (chunk, key) => {
-      if (key && key.name === "q") {
-        await this.stop();
-        process.exit();
+    readline.emitKeypressEvents(process.stdin);
+    if (process.stdin.isTTY) {
+      process.stdin.setRawMode(true);
+    }
+
+    process.stdin.once("keypress", (_, keyEvent) => {
+      if (
+        keyEvent &&
+        (keyEvent.name === "q" ||
+          (keyEvent.ctrl === true && keyEvent.name === "c"))
+      ) {
+        this.stop().finally(() => {
+          process.stdin.setRawMode(false);
+          process.exit();
+        });
       }
-      return Promise.resolve();
     });
   }
 
@@ -481,12 +507,14 @@ export class ChainWalker {
       this.logger.trace(
         `Trying to reach node under ${this.config.nodeHost} ...`
       );
-      const { height } = await this.ledger.block.getBlockByHeight(
-        // @ts-ignore
-        undefined,
-        false
+      const { height } = await pRetry(() =>
+        this.ledger.block.getBlockByHeight(
+          // @ts-ignore
+          undefined,
+          false
+        )
       );
-      return height;
+      return height - (this.config.blockOffset || 0);
     } catch (e: any) {
       this.logger.error(`Node ${this.config.nodeHost} not reachable`);
       process.exit(1);

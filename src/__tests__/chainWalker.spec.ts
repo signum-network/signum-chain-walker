@@ -68,6 +68,29 @@ describe("chainWalker", () => {
       // @ts-ignore
       expect(ctx.ledgerClient).toBeDefined();
     });
+    it("should sync with blockchain - using a startHeight and blockOffset", async () => {
+      let block: any = null;
+      let ctx: ChainWalkerContext | null = null;
+      const handler = jest.fn().mockImplementation((b, c) => {
+        block = b;
+        ctx = c;
+      });
+
+      const walker = new ChainWalker({
+        verbose: IsVerbose,
+        mockLedger: TestLedger,
+        nodeHost: "",
+        cachePath: "",
+        blockOffset: 2,
+      });
+      await walker.onBlock(handler).walk(552091);
+      await walker.stop();
+      expect(handler).toBeCalledTimes(1);
+      expect(block?.height).toBe(552092); // mock Ledger
+      expect(ctx).not.toBeNull();
+      // @ts-ignore
+      expect(ctx.ledgerClient).toBeDefined();
+    });
     it("should sync with blockchain - using a startHeight and using all callbacks", async () => {
       let block: any = null;
       const pendingHandler = jest.fn();
@@ -243,6 +266,24 @@ describe("chainWalker", () => {
       await walker.stop();
       expect(handler).toBeCalledTimes(2);
       expect(block?.height).toBe(552096);
+    });
+    it("must trigger blockHandler with blockOffset", async () => {
+      let block: any = null;
+      const handler = jest.fn().mockImplementation((b) => (block = b));
+      const walker = new ChainWalker({
+        verbose: IsVerbose,
+        intervalSeconds: 0.1,
+        mockLedger: TestLedger,
+        nodeHost: "",
+        cachePath: "", // in memory
+        blockOffset: 2,
+      }).onBlock(handler);
+
+      await walker.listen();
+      await sleep(110);
+      await walker.stop();
+      expect(handler).toBeCalledTimes(2);
+      expect(block?.height).toBe(552094);
     });
     it("must trigger transactionsHandler", async () => {
       let lastProcessedTx: any = null;
