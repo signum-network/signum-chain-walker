@@ -8,7 +8,7 @@ let movedSigna = Amount.Zero();
 
 const walker = new ChainWalker({
   nodeHost: "http://localhost:6876",
-  verbose: false,
+  verbose: true,
   cachePath: "./example.catchUpBlockchain.cache.json",
 })
   .onBlock(() => {

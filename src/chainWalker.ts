@@ -507,12 +507,21 @@ export class ChainWalker {
       this.logger.trace(
         `Trying to reach node under ${this.config.nodeHost} ...`
       );
-      const { height } = await pRetry(() =>
-        this.ledger.block.getBlockByHeight(
-          // @ts-ignore
-          undefined,
-          false
-        )
+      const { height } = await pRetry(
+        () =>
+          this.ledger.block.getBlockByHeight(
+            // @ts-ignore
+            undefined,
+            false
+          ),
+        {
+          onFailedAttempt: (error) => {
+            this.logger.warn(
+              `Cannot reach Node - trying again (${error.retriesLeft} retries left)`
+            );
+          },
+          retries: 5,
+        }
       );
       return height - (this.config.blockOffset || 0);
     } catch (e: any) {
