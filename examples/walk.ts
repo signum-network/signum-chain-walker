@@ -29,5 +29,6 @@ const walker = new ChainWalker({
     `This is ${movedSigna.clone().divide(countedTransactions)} per tx`
   );
   console.log(`This is ${movedSigna.clone().divide(countedBlocks)} per block`);
+  await walker.stop();
   process.exit(0);
 })();

@@ -341,9 +341,17 @@ export class ChainWalker {
    * Stops listener
    */
   async stop() {
-    process.stdin.removeAllListeners("keypress");
+    if (this.stopRequested) {
+      return; // Already stopping
+    }
     this.logger.info("Shutting down...");
     this.stopRequested = true;
+
+    // Clean up event listeners
+    process.stdin.removeAllListeners("keypress");
+    process.removeAllListeners("SIGTERM");
+    process.removeAllListeners("SIGINT");
+
     if (this.scheduler) {
       this.scheduler.stop();
       this.scheduler = null;
@@ -488,18 +496,36 @@ export class ChainWalker {
       process.stdin.setRawMode(true);
     }
 
-    process.stdin.once("keypress", (_, keyEvent) => {
+    const keypressHandler = (_: any, keyEvent: any) => {
       if (
         keyEvent &&
         (keyEvent.name === "q" ||
           (keyEvent.ctrl === true && keyEvent.name === "c"))
       ) {
         this.stop().finally(() => {
-          process.stdin.setRawMode(false);
-          process.exit();
+          if (process.stdin.isTTY) {
+            process.stdin.setRawMode(false);
+          }
+          process.exit(0);
         });
       }
-    });
+    };
+
+    process.stdin.on("keypress", keypressHandler);
+
+    // Handle SIGTERM and SIGINT signals for graceful shutdown
+    const signalHandler = (signal: string) => {
+      this.logger.info(`Received ${signal} signal`);
+      this.stop().finally(() => {
+        if (process.stdin.isTTY) {
+          process.stdin.setRawMode(false);
+        }
+        process.exit(0);
+      });
+    };
+
+    process.once("SIGTERM", () => signalHandler("SIGTERM"));
+    process.once("SIGINT", () => signalHandler("SIGINT"));
   }
 
   private async fetchCurrentBlockHeight() {
